@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Apr 27 22:19:09 CEST 2017:
+Booten von Derby Version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): Instanz a816c00e-015b-b111-3e06-00000e393f78
+für Datenbankverzeichnis F:\Elternsprechtag_20151117_aktuellsteVersion_Wegplaner\Abschlussprojekt_Heinrichs\db\dbHeinrichs   mit Klassenladeprogrammn sun.misc.Launcher$AppClassLoader@5e481248
+
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_60-b27
+user.dir=F:\Elternsprechtag_20151117_aktuellsteVersion_Wegplaner\Abschlussprojekt_Heinrichs\Wegfinder_Heinrichs_Lehrerverwaltung
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Das Ladeprogramm für Datenbankklassen wurde gestartet - derby.database.classpath=''
