@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Mon Nov 21 16:28:16 CET 2016:
-Booten von Derby Version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): Instanz a816c00e-0158-8780-831e-000000ac6380
-für Datenbankverzeichnis F:\Elternsprechtag_20151117\Abschlussprojekt_Heinrichs\Wegfinder_Heinrichs_DB\dist\db\dbHeinrichs   mit Klassenladeprogrammn sun.misc.Launcher$AppClassLoader@52e922
+Tue May 02 19:54:10 CEST 2017:
+Booten von Derby Version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): Instanz a816c00e-015b-ca4c-50ae-000000ac6d58
+für Datenbankverzeichnis C:\Java\Git\europagymnasium_wegfinder\Wegfinder_Heinrichs_DB\dist\db\dbHeinrichs   mit Klassenladeprogrammn sun.misc.Launcher$AppClassLoader@106d69c
 
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_101-b13
-user.dir=F:\Elternsprechtag_20151117\Abschlussprojekt_Heinrichs\Wegfinder_Heinrichs_DB\dist
-os.name=Windows 8.1
+java.runtime.version=1.8.0_71-b15
+user.dir=C:\Java\Git\europagymnasium_wegfinder\Wegfinder_Heinrichs_DB\dist
+os.name=Windows 10
 os.arch=x86
-os.version=6.3
+os.version=10.0
 derby.system.home=null
 Das Ladeprogramm für Datenbankklassen wurde gestartet - derby.database.classpath=''

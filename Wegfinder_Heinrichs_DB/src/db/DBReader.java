@@ -51,7 +51,7 @@ public class DBReader{
      * wobei jede Tabellenzeile wieder in einer eigenen Liste steht.
      */
     public void executeQuery(String query){
-        try{    
+        try{
             String driver = "org.apache.derby.jdbc.EmbeddedDriver";
             String connectionURL = getURL();
             Class.forName(driver);

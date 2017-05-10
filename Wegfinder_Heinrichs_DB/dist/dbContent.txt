@@ -1,0 +1,15 @@
+- (Verhindert);Adam;Mareike;1
+- (Verhindert);Depka;Silvia;1
+- (Verhindert);Dunkel;Andrea;1
+- (Verhindert);Engel;Jürgen;1
+- (Verhindert);Feldhoff;Hans-Joachim;1
+- (Verhindert);Knoop;Jan;1
+- (Verhindert);Ligocki;Michael;1
+- (Verhindert);Paland;Ralph;1
+- (Verhindert);Pardella;Birgit;1
+- (Verhindert);Perkow;Maya;1
+- (Verhindert);Peters;Eva Maria;1
+- (Verhindert);Peters;Herr;1
+- (Verhindert);Schumacher;Johannes;1
+- (Verhindert);Strucken;Tatjana;1
+- (Verhindert);Tripp;Henning;1

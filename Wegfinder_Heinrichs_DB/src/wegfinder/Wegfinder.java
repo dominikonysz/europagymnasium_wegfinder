@@ -22,11 +22,9 @@ public class Wegfinder {
      */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Raumnavigator"); 
-        JScrollPane scroller = new JScrollPane();
         Content inhalt = new Content(); 
-        scroller.add(inhalt);
         frame.setSize(880, 954); 
-        frame.add(scroller);
+        frame.add(inhalt);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

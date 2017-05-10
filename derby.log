@@ -1,5 +1,5 @@
-Fri Apr 28 15:34:41 CEST 2017 Thread[AWT-EventQueue-0,6,main] Cleanup action starting
-java.sql.SQLException: Die Datenbank 'F:/Elternsprechtag_20151117_aktuellsteVersion_Wegplaner/db/dbHeinrichs' wurde nicht gefunden.
+Tue May 02 19:52:37 CEST 2017 Thread[AWT-EventQueue-0,6,main] Cleanup action starting
+java.sql.SQLException: Die Datenbank 'C:/Java/Git/db/dbHeinrichs' wurde nicht gefunden.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.Util.newEmbedSQLException(Unknown Source)
@@ -32,12 +32,12 @@ java.sql.SQLException: Die Datenbank 'F:/Elternsprechtag_20151117_aktuellsteVers
 	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
 	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
 	at java.awt.EventDispatchThread.run(Unknown Source)
-Caused by: java.sql.SQLException: Die Datenbank 'F:/Elternsprechtag_20151117_aktuellsteVersion_Wegplaner/db/dbHeinrichs' wurde nicht gefunden.
+Caused by: java.sql.SQLException: Die Datenbank 'C:/Java/Git/db/dbHeinrichs' wurde nicht gefunden.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
 	... 32 more
 ============= begin nested exception, level (1) ===========
-java.sql.SQLException: Die Datenbank 'F:/Elternsprechtag_20151117_aktuellsteVersion_Wegplaner/db/dbHeinrichs' wurde nicht gefunden.
+java.sql.SQLException: Die Datenbank 'C:/Java/Git/db/dbHeinrichs' wurde nicht gefunden.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.wrapArgsForTransportAcrossDRDA(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory40.getSQLException(Unknown Source)
