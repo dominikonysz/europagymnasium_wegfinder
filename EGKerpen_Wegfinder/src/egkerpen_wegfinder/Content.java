@@ -54,7 +54,7 @@ public class Content extends javax.swing.JPanel{
     // private int i, j;
     
     /**
-     * Constructor. Initialises the GUI components and attributes of the class.
+     * Constructor. Initializes the GUI components and attributes of the class.
      * @param frame parent frame
      */
     @SuppressWarnings("empty-statement")
@@ -159,14 +159,14 @@ public class Content extends javax.swing.JPanel{
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(145, 145, 145)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -224,6 +224,14 @@ public class Content extends javax.swing.JPanel{
         */
         path = d.getPath(schoolGraph.getNode((String) jComboBox1.getSelectedItem()), schoolGraph.getNode((String) jComboBox2.getSelectedItem()));
         
+        
+        // For debugging use only
+        path.toFirst();
+        while(path.hasAccess()){
+            System.out.println(path.getObject().getName());
+            path.next();
+        }
+        path.toFirst();
         /**
         * Include these lines to check every path of the graph.
         */
@@ -238,6 +246,11 @@ public class Content extends javax.swing.JPanel{
         repaint();
     }//GEN-LAST:event_findPath
 
+    private void lSuche(java.awt.event.ActionEvent evt) {                          
+        
+        
+    }
+    
     /**
      * This method prints the content of the panel.
      * IMPORTANT NOTE: Modify the String 'filename' to alter the location
@@ -834,6 +847,9 @@ public class Content extends javax.swing.JPanel{
         schoolGraph.addEdge(schoolGraph.getNode("P040"), schoolGraph.getNode("P042"), 4);
         schoolGraph.addEdge(schoolGraph.getNode("P042"), schoolGraph.getNode("P043"), 13);
         schoolGraph.addEdge(schoolGraph.getNode("P043"), schoolGraph.getNode("P044"), 10);
+        
+        //Dirty Connetion added here
+        schoolGraph.addEdge(schoolGraph.getNode("P027"), schoolGraph.getNode("P023"), 17);
         
         // First floor:
         

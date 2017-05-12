@@ -18,7 +18,7 @@ public class Dijkstra {
     private Graph g;
     
     /**
-     * Constructor. Initialises the attribute g.
+     * Constructor. Initializes the attribute g.
      * 
      * @param g The graph in that the shortest paths are searched for.
      */
