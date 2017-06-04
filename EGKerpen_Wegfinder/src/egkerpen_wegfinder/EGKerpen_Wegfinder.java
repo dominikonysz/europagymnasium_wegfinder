@@ -22,8 +22,8 @@ public class EGKerpen_Wegfinder {
         Wegfinder frame = new Wegfinder("Raumnavigator"); 
         //JFrame frame = new JFrame("Raumnavigator"); 
         frame.setSize(886, 963); 
-        //Content inhalt = new Content(frame);
-        //frame.getContentPane().add(inhalt);
+        Content inhalt = new Content(frame);
+        frame.getContentPane().add(inhalt);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

@@ -5,11 +5,18 @@
  */
 package egkerpen_wegfinder;
 
+import db.DBController;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import listenklassen.List_extended;
 
 /**
  * Dialog to search for a teacher
- * dynamically ads a button for each teacher to directly search for the path. 
+ * dynamically adds a button for each teacher to directly search for the path. 
  * @author Leonard
  */
 public class lSuche extends javax.swing.JFrame {
@@ -17,14 +24,73 @@ public class lSuche extends javax.swing.JFrame {
     /**
      * Creates new form lSuche
      */
-    private int ButtonOffset;
+    private int ButtonOffset;  //vertical offset of the buttons and labels
+    private Content cont;      //parent object to draw path
+    private JButton buttons[]; //to keep track of dynamically generated buttons for deletion
+    private JLabel label[];    //to keep track of dynamically generated labels for deletion
+    private int lbIterator;    //number of generated buttons and label at that time
     
-    public lSuche() {
+    
+    public lSuche(Content pContent) {
         initComponents();
         ButtonOffset = 0;
-        makeJButton(); 
-        makeJButton(); 
-        makeJButton(); 
+        buttons = new JButton[10]; //max 10 because only 5 will be displayed at the same time
+        label = new JLabel[10];
+        lbIterator = 0;
+        cont = pContent;
+        jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+             public void changedUpdate(DocumentEvent e) {
+               update();
+             }
+             @Override
+             public void removeUpdate(DocumentEvent e) {
+               update();
+             }
+             @Override
+             public void insertUpdate(DocumentEvent e) {
+               update();
+             }
+            /**
+             * is executed when anything changes in the textfield
+             * used to display any teacher where the given string is a substring 
+             * of the (sur)name
+             */
+             private void update(){ 
+                 String lRequest = jTextField1.getText();
+                 DBController con = DBController.getInstance();
+                 String query = "SELECT * FROM raumverteilung WHERE Nachname Like '%" + lRequest + "%' AND NOT raum = '- (Verhindert)'";
+                 
+                 con.executeQuery(query);
+                 
+                 List_extended<List_extended<String>> l = con.getResults();
+                 
+                 if (con.getResultsAmount() <= 5){
+                     String[][] s = new String[con.getResultsAmount()][4];
+            
+                    l.toFirst();
+
+                    for(int i = 0; i < s.length; i++){
+                        List_extended<String> l2 = l.getObject();
+                        l2.toFirst();
+
+                        for(int j = 0; j < s[i].length; j++){
+                            s[i][j] = l2.getObject();
+                            l2.next();
+                        }
+
+                        l.next();
+                    }
+                    clean();
+                    System.out.println(con.getResultsAmount());
+                    for(int i = 0; i < con.getResultsAmount(); i++){
+                        addNewTeacher(s[i][1], s[i][0]);
+                    }
+                }
+
+            }
+             
+        });
     }
 
     /**
@@ -43,6 +109,11 @@ public class lSuche extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextField1.setText("jTextField1");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Nachname");
 
@@ -81,54 +152,88 @@ public class lSuche extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(lSuche.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(lSuche.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(lSuche.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(lSuche.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new lSuche().setVisible(true);
-            }
-        });
-    }
-    
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+   
     /**
      * Generates a new button on the right with
      * an increasing offset on the y - axis 
+     * by clicking on it, it marks the way from "Foyer" to the right room
      */
-    private void makeJButton(){
+    private void makeJButton(String msg){
         JButton nB = new JButton();
+        buttons[lbIterator] = nB;
         nB.setBounds(200, 110 + ButtonOffset, 100, 27);
-        nB.setText("Zeige Weg");
-        jPanel1.add(nB);
-        ButtonOffset += 40;
+        nB.setText(msg);
+        
+        nB.addActionListener(new ActionListener(){
+            
+            @Override
+            public void actionPerformed(ActionEvent e){
+                cont.findPath("Foyer", msg);
+            }
+        });
+        
+        jPanel1.add(nB);     
+    }
+    
+    /**
+     * Adds new label on the same height as the related button
+     * used to label the button with the teachers name
+     * @param msg 
+     */
+    private void makeJLabel(String msg){
+        JLabel nL = new JLabel();
+        label[lbIterator] = nL;
+        nL.setBounds(70, 110 + ButtonOffset, 100, 27);
+        nL.setText(msg);
+        jPanel1.add(nL); 
         
     }
 
+    /**
+     * Adds new teacher with name and room
+     * @param name
+     * @param room 
+     */
+    private void addNewTeacher(String name, String room){
+        makeJButton(room);
+        makeJLabel(name);
+        ButtonOffset += 40;
+        lbIterator++;
+        this.invalidate();
+        this.validate();
+        this.repaint();
+        
+    }
+    
+    /**
+     * cleans buttons and labels from the panel
+     * IMPORTANT: still memory leakage 
+     * TODO: proper deletion of both
+     */
+    public void clean(){
+        for(int i = 0; i<buttons.length; i++){
+            if(buttons[i] != null){
+                buttons[i].setVisible(false);  
+                buttons[i] = null;
+            }
+        }
+        for(int k = 0; k<label.length;k++){
+            if(label[k] != null){
+                label[k].setVisible(false);
+                buttons[k] = null;
+            } 
+        }
+        lbIterator = 0;
+        ButtonOffset = 0;
+        this.invalidate();
+        this.validate();
+        this.repaint();
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
