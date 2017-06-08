@@ -1,0 +1,2 @@
+Raum 38;Hansa;-;1
+Raum 39;Hansb;-;1
