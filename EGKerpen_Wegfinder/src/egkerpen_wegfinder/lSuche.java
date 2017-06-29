@@ -171,7 +171,7 @@ public class lSuche extends javax.swing.JFrame {
             
             @Override
             public void actionPerformed(ActionEvent e){
-                cont.findPath("Foyer", msg);
+                cont.getGroundPlan().drawPath("Foyer", msg);
             }
         });
         
