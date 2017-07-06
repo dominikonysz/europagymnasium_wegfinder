@@ -7,10 +7,12 @@ package egkerpen_wegfinder;
 
 import graphklassen.*;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.text.NumberFormat;
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import javax.swing.JLabel;
 import listenklassen.*;
 
 /**
@@ -23,9 +25,12 @@ public class GroundPlanPanel extends javax.swing.JPanel {
     private Dijkstra d;
     private List<GraphNode> path;
     private final Image gpImage;
-    private int bgSideLength;
+    private int bgSideLength, standardSideLength;
+    private double diff;
     private int xOffset, yOffset;
     private Content content;
+    private boolean drawAll;
+    JLabel[] nodeNames;
     
     /**
      * Creates new form GroundPlanPanel
@@ -36,8 +41,11 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         buildGraph();
         d = new Dijkstra(schoolGraph);
         gpImage = new ImageIcon(getClass().getResource("EGKerpen_Grundriss.png")).getImage();
+        standardSideLength = gpImage.getWidth(this);
         path = new List<>();
         this.content = content;
+        drawAll = true;
+        nodeNames = new JLabel[0];
     }
 
     /**
@@ -112,35 +120,69 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         if(!path.isEmpty()){
             g.setColor(Color.red);
             GraphNode n1, n2;
-        
-            int verticalOffset = -4;
             
-            path.toFirst();
-        
-            n1 = path.getObject();
-        
-            path.next();
-            
-            while(path.hasAccess()){
-                n2 = path.getObject();
-                
-                if(!(n1.getName().charAt(0) == 'T' && n2.getName().charAt(0) == 'T')){
-                    g.fillRect(n1.getX() - 2, n1.getY() - 2 + verticalOffset, 5, 5);
-                    g.drawLine(n1.getX(), n1.getY() + verticalOffset, n2.getX(), n2.getY() + verticalOffset);
-                    g.fillRect(n2.getX() - 2, n2.getY() - 2 + verticalOffset, 5, 5);
-                }
-            
-                n1 = n2;
+            if(!drawAll) {
+                path.toFirst();
+
+                n1 = path.getObject();
+
                 path.next();
+
+                while(path.hasAccess()){
+                    n2 = path.getObject();
+
+                    if(!(n1.getName().charAt(0) == 'T' && n2.getName().charAt(0) == 'T')){
+                        g.fillRect(n1.getX() - 1, n1.getY() - 1, 3, 3);
+                        g.drawLine(n1.getX(), n1.getY(), n2.getX(), n2.getY());
+                        g.fillRect(n2.getX() - 1, n2.getY() - 1, 3, 3);
+                    }
+
+                    n1 = n2;
+                    path.next();
+                }
+
+                g.setColor(Color.green);
+
+                path.toFirst();
+                g.fillRect(path.getObject().getX() - 2, path.getObject().getY() - 2, 5, 5);
+
+                path.toLast();
+                g.fillRect(path.getObject().getX() - 2, path.getObject().getY() - 2, 5, 5);
             }
-            
-            g.setColor(Color.green);
-            
-            path.toFirst();
-            g.fillRect(path.getObject().getX() - 2, path.getObject().getY() - 2 + verticalOffset, 5, 5);
-            
-            path.toLast();
-            g.fillRect(path.getObject().getX() - 2, path.getObject().getY() - 2 + verticalOffset, 5, 5);
+            else {
+                List<GraphNode> nodes = schoolGraph.getNodes();
+                nodes.toFirst();
+                int nodesCount = 0;
+                while(nodes.hasAccess()) {
+                    nodesCount++;
+                    nodes.next();
+                }
+                if(nodeNames.length == 0) {
+                    nodeNames = new JLabel[nodesCount];
+                }
+                else {
+                    
+                }
+                nodes.toFirst();
+                int counter = 0;
+                GraphNode node;
+                System.out.println(diff);
+                while(nodes.hasAccess()) {
+                    node = nodes.getObject();
+                    g.fillRect((int) (diff * node.getX())-1, (int) (diff * node.getY())-1, 3, 3);
+                    if(nodeNames[counter] == null) {
+                        nodeNames[counter] = new JLabel(node.getName());
+                        nodeNames[counter].setFont(new Font(nodeNames[counter].getFont().getName(), Font.PLAIN, 8));
+                        nodeNames[counter].setBounds((int) (diff * node.getX()),(int) (diff *  node.getY()), 100, 8);
+                        this.add(nodeNames[counter]);
+                    }
+                    else {
+                        nodeNames[counter].setLocation((int) (diff * node.getX()),(int) (diff *  node.getY()));
+                    }
+                    counter++;
+                    nodes.next();
+                }
+            }
         }
     }
     
@@ -152,6 +194,11 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         bgSideLength = Math.min(this.getHeight(), this.getWidth());
         xOffset = (content.getWidth() - bgSideLength) / 2;
         yOffset = 51;
+        diff = (double) bgSideLength / standardSideLength;
+    }
+    
+    public void drawAllPoints(boolean state) {
+        drawAll = state;
     }
     
     /**
@@ -165,155 +212,155 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         
         // Stairs:
         
-        schoolGraph.addNode(new GraphNode("T1_0", 575, 707));
-        schoolGraph.addNode(new GraphNode("T2_0", 675, 722));
-        schoolGraph.addNode(new GraphNode("T3_0", 673, 647));
-        schoolGraph.addNode(new GraphNode("T4_0", 596, 586));
-        schoolGraph.addNode(new GraphNode("T5_0", 656, 581));
-        schoolGraph.addNode(new GraphNode("T6_0", 589, 746));
+        schoolGraph.addNode(new GraphNode("T1_0", 520, 656));
+        schoolGraph.addNode(new GraphNode("T2_0", 640, 670));
+        schoolGraph.addNode(new GraphNode("T3_0", 632, 608));
+        schoolGraph.addNode(new GraphNode("T4_0", 551, 519));
+        schoolGraph.addNode(new GraphNode("T5_0", 608, 520));
+        schoolGraph.addNode(new GraphNode("T6_0", 536, 805)); // Finished
         
         // Waypoints:
         
-        schoolGraph.addNode(new GraphNode("P000", 591, 739));
-        schoolGraph.addNode(new GraphNode("P001", 583, 739));
-        schoolGraph.addNode(new GraphNode("P002", 546, 739));
-        schoolGraph.addNode(new GraphNode("P003", 537, 739));
-        schoolGraph.addNode(new GraphNode("P004", 591, 707));
-        schoolGraph.addNode(new GraphNode("P005", 583, 707));
-        schoolGraph.addNode(new GraphNode("P007", 627, 739));
-        schoolGraph.addNode(new GraphNode("P008", 591, 684));
-        schoolGraph.addNode(new GraphNode("P010", 566, 646));
-        schoolGraph.addNode(new GraphNode("P011", 566, 636));
-        schoolGraph.addNode(new GraphNode("P012", 566, 597));
-        schoolGraph.addNode(new GraphNode("P013", 591, 611));
-        schoolGraph.addNode(new GraphNode("P014", 591, 573));
-        schoolGraph.addNode(new GraphNode("P016", 594, 557));
-        schoolGraph.addNode(new GraphNode("P017", 594, 536));
-        schoolGraph.addNode(new GraphNode("P018", 605, 536));
-        schoolGraph.addNode(new GraphNode("P019", 643, 536));
-        schoolGraph.addNode(new GraphNode("P020", 667, 536));
-        schoolGraph.addNode(new GraphNode("P021", 680, 536));
-        schoolGraph.addNode(new GraphNode("P022", 680, 554));
-        schoolGraph.addNode(new GraphNode("P023", 680, 564));
-        schoolGraph.addNode(new GraphNode("P024", 680, 593));
-        schoolGraph.addNode(new GraphNode("P025", 656, 593));
-        schoolGraph.addNode(new GraphNode("P026", 673, 670));
-        schoolGraph.addNode(new GraphNode("P027", 700, 670));
-        schoolGraph.addNode(new GraphNode("P028", 729, 670));
-        schoolGraph.addNode(new GraphNode("P029", 759, 670));
-        schoolGraph.addNode(new GraphNode("P030", 784, 670));
-        schoolGraph.addNode(new GraphNode("P032", 803, 670));
-        schoolGraph.addNode(new GraphNode("P033", 824, 670));
-        schoolGraph.addNode(new GraphNode("P034", 675, 711));
-        schoolGraph.addNode(new GraphNode("P035", 700, 711));
-        schoolGraph.addNode(new GraphNode("P036", 700, 732));
-        schoolGraph.addNode(new GraphNode("P037", 750, 732));
-        schoolGraph.addNode(new GraphNode("P039", 761, 732));
-        schoolGraph.addNode(new GraphNode("P040", 782, 732));
-        schoolGraph.addNode(new GraphNode("P041", 782, 744));
-        schoolGraph.addNode(new GraphNode("P042", 789, 732));
-        schoolGraph.addNode(new GraphNode("P043", 816, 732));
-        schoolGraph.addNode(new GraphNode("P044", 816, 749));
+        schoolGraph.addNode(new GraphNode("P000", 539, 684));
+        schoolGraph.addNode(new GraphNode("P001", 530, 684));
+        schoolGraph.addNode(new GraphNode("P002", 483, 684));
+        schoolGraph.addNode(new GraphNode("P003", 466, 684));
+        schoolGraph.addNode(new GraphNode("P004", 540, 656));
+        schoolGraph.addNode(new GraphNode("P005", 550, 656));
+        schoolGraph.addNode(new GraphNode("P007", 589, 683));
+        schoolGraph.addNode(new GraphNode("P008", 538, 632));
+        schoolGraph.addNode(new GraphNode("P010", 506, 584));
+        schoolGraph.addNode(new GraphNode("P011", 506, 574));
+        schoolGraph.addNode(new GraphNode("P012", 506, 534));
+        schoolGraph.addNode(new GraphNode("P013", 543, 548));
+        schoolGraph.addNode(new GraphNode("P014", 543, 504));
+        schoolGraph.addNode(new GraphNode("P016", 543, 472));
+        schoolGraph.addNode(new GraphNode("P017", 543, 457));
+        schoolGraph.addNode(new GraphNode("P018", 558, 448));
+        schoolGraph.addNode(new GraphNode("P019", 608, 448));
+        schoolGraph.addNode(new GraphNode("P020", 632, 448));
+        schoolGraph.addNode(new GraphNode("P021", 649, 448));
+        schoolGraph.addNode(new GraphNode("P022", 645, 467));
+        schoolGraph.addNode(new GraphNode("P023", 645, 472));
+        schoolGraph.addNode(new GraphNode("P024", 642, 535));
+        schoolGraph.addNode(new GraphNode("P025", 607, 535));
+        schoolGraph.addNode(new GraphNode("P026", 632, 625));
+        schoolGraph.addNode(new GraphNode("P027", 654, 625));
+        schoolGraph.addNode(new GraphNode("P028", 700, 625));
+        schoolGraph.addNode(new GraphNode("P029", 720, 625));
+        schoolGraph.addNode(new GraphNode("P030", 754, 625));
+        schoolGraph.addNode(new GraphNode("P032", 787, 625));
+        schoolGraph.addNode(new GraphNode("P033", 810, 625));
+        schoolGraph.addNode(new GraphNode("P034", 647, 659));
+        schoolGraph.addNode(new GraphNode("P035", 670, 659));
+        schoolGraph.addNode(new GraphNode("P036", 670, 686));
+        schoolGraph.addNode(new GraphNode("P037", 703, 686));
+        schoolGraph.addNode(new GraphNode("P039", 736, 686));
+        schoolGraph.addNode(new GraphNode("P040", 742, 686));
+        schoolGraph.addNode(new GraphNode("P041", 742, 711));
+        schoolGraph.addNode(new GraphNode("P042", 766, 686));
+        schoolGraph.addNode(new GraphNode("P043", 797, 686));
+        schoolGraph.addNode(new GraphNode("P044", 797, 718)); // Finished
         
         // Rooms:
         
-        schoolGraph.addNode(new GraphNode("Bibliothek", 609, 739));
-        schoolGraph.addNode(new GraphNode("Foyer", 627, 707));
-        schoolGraph.addNode(new GraphNode("WC Herren", 546, 724));
-        schoolGraph.addNode(new GraphNode("WC Damen", 537, 724));
-        schoolGraph.addNode(new GraphNode("Mensa", 527, 739));
-        schoolGraph.addNode(new GraphNode("Saftladen", 596, 586));
-        schoolGraph.addNode(new GraphNode("Raum 38", 548, 646));
-        schoolGraph.addNode(new GraphNode("Raum 39", 548, 637));
-        schoolGraph.addNode(new GraphNode("Raum 42", 548, 597));
-        schoolGraph.addNode(new GraphNode("Werkraum 8", 594, 525));
-        schoolGraph.addNode(new GraphNode("Werkraum 14", 605, 525));
-        schoolGraph.addNode(new GraphNode("Werkraum 15", 643, 525));
-        schoolGraph.addNode(new GraphNode("Werkraum 17", 667, 525));
-        schoolGraph.addNode(new GraphNode("Werkraum 20", 680, 525));
-        schoolGraph.addNode(new GraphNode("Werkraum 21", 693, 551));
-        schoolGraph.addNode(new GraphNode("Werkraum 24", 693, 576));
-        schoolGraph.addNode(new GraphNode("Werkraum 27", 668, 557));
-        schoolGraph.addNode(new GraphNode("Werkraum 32", 605, 557));
-        schoolGraph.addNode(new GraphNode("Kunstraum 53", 596, 586));
-        schoolGraph.addNode(new GraphNode("Raum 63", 729, 656));
-        schoolGraph.addNode(new GraphNode("Raum 64", 759, 656));
-        schoolGraph.addNode(new GraphNode("Raum 65", 782, 656));
-        schoolGraph.addNode(new GraphNode("Raum 66", 803, 656));
-        schoolGraph.addNode(new GraphNode("Raum 67", 824, 656));
-        schoolGraph.addNode(new GraphNode("Raum 70", 824, 694));
-        schoolGraph.addNode(new GraphNode("Raum 71", 803, 694));
-        schoolGraph.addNode(new GraphNode("Raum 72", 785, 694));
-        schoolGraph.addNode(new GraphNode("Raum 73", 760, 694));
-        schoolGraph.addNode(new GraphNode("Raum 87", 761, 720));
-        schoolGraph.addNode(new GraphNode("Raum 88", 789, 720));
-        schoolGraph.addNode(new GraphNode("Raum 89", 816, 720));
-        schoolGraph.addNode(new GraphNode("Raum 90", 829, 732));
-        schoolGraph.addNode(new GraphNode("Raum 92", 829, 749));
-        schoolGraph.addNode(new GraphNode("Raum 93", 816, 764));
-        schoolGraph.addNode(new GraphNode("Raum 94", 801, 747));
-        schoolGraph.addNode(new GraphNode("Raum 95", 789, 764));
-        schoolGraph.addNode(new GraphNode("Raum 96", 782, 764));
-        schoolGraph.addNode(new GraphNode("Raum 97", 750, 763));
+        schoolGraph.addNode(new GraphNode("Bibliothek", 573, 683));
+        schoolGraph.addNode(new GraphNode("Foyer", 589, 648));
+        schoolGraph.addNode(new GraphNode("WC Herren", 482, 672));
+        schoolGraph.addNode(new GraphNode("WC Damen", 466, 672));
+        schoolGraph.addNode(new GraphNode("Mensa", 433, 684));
+        schoolGraph.addNode(new GraphNode("Saftladen", 528, 526));
+        schoolGraph.addNode(new GraphNode("Raum 38", 493, 586));
+        schoolGraph.addNode(new GraphNode("Raum 39", 493, 562));
+        schoolGraph.addNode(new GraphNode("Raum 42", 493, 522));
+        schoolGraph.addNode(new GraphNode("Werkraum 8", 542, 440));
+        schoolGraph.addNode(new GraphNode("Werkraum 14", 559, 440));
+        schoolGraph.addNode(new GraphNode("Werkraum 15", 608, 440));
+        schoolGraph.addNode(new GraphNode("Werkraum 17", 632, 440));
+        schoolGraph.addNode(new GraphNode("Werkraum 20", 649, 440));
+        schoolGraph.addNode(new GraphNode("Werkraum 21", 652, 467));
+        schoolGraph.addNode(new GraphNode("Werkraum 24", 658, 486));
+        schoolGraph.addNode(new GraphNode("Werkraum 27", 633, 472));
+        schoolGraph.addNode(new GraphNode("Werkraum 32", 551, 472));
+        //schoolGraph.addNode(new GraphNode("Kunstraum 53", 596, 586));  needs to be moved to the basement
+        schoolGraph.addNode(new GraphNode("Raum 63", 700, 617));
+        schoolGraph.addNode(new GraphNode("Raum 64", 719, 617));
+        schoolGraph.addNode(new GraphNode("Raum 65", 754, 617));
+        schoolGraph.addNode(new GraphNode("Raum 66", 784, 617));
+        schoolGraph.addNode(new GraphNode("Raum 67", 812, 617));
+        schoolGraph.addNode(new GraphNode("Raum 70", 812, 636));
+        schoolGraph.addNode(new GraphNode("Raum 71", 794, 636));
+        schoolGraph.addNode(new GraphNode("Raum 72", 756, 636));
+        schoolGraph.addNode(new GraphNode("Raum 73", 735, 636));
+        schoolGraph.addNode(new GraphNode("Raum 87", 738, 676));
+        schoolGraph.addNode(new GraphNode("Raum 88", 766, 676));
+        schoolGraph.addNode(new GraphNode("Raum 89", 799, 676));
+        schoolGraph.addNode(new GraphNode("Raum 90", 809, 687));
+        schoolGraph.addNode(new GraphNode("Raum 92", 809, 718));
+        schoolGraph.addNode(new GraphNode("Raum 93", 798, 729));
+        schoolGraph.addNode(new GraphNode("Raum 94", 788, 713));
+        schoolGraph.addNode(new GraphNode("Raum 95", 751, 718));
+        schoolGraph.addNode(new GraphNode("Raum 96", 734, 718));
+        schoolGraph.addNode(new GraphNode("Raum 97", 703, 720)); // Finished
         
             // First floor:
         
         // Stairs:
         
-        schoolGraph.addNode(new GraphNode("T1_1", 133, 703));
-        schoolGraph.addNode(new GraphNode("T2_1", 275, 713));
-        schoolGraph.addNode(new GraphNode("T3_1", 272, 622));
-        schoolGraph.addNode(new GraphNode("T4_1", 161, 531));
-        schoolGraph.addNode(new GraphNode("T5_1", 242, 531));
-        schoolGraph.addNode(new GraphNode("T6_1", 161, 848));
-        schoolGraph.addNode(new GraphNode("T7_1", 35, 815));
-        schoolGraph.addNode(new GraphNode("T8_1", 412, 731));
-        schoolGraph.addNode(new GraphNode("T9_1", 412, 656));
+        schoolGraph.addNode(new GraphNode("T1_1", 135, 469));
+        schoolGraph.addNode(new GraphNode("T2_1", 285, 478));
+        schoolGraph.addNode(new GraphNode("T3_1", 261, 400));
+        schoolGraph.addNode(new GraphNode("T4_1", 156, 286));
+        schoolGraph.addNode(new GraphNode("T5_1", 233, 289));
+        schoolGraph.addNode(new GraphNode("T6_1", 156, 625));
+        schoolGraph.addNode(new GraphNode("T7_1", 16, 574));
+        schoolGraph.addNode(new GraphNode("T8_1", 441, 495));
+        schoolGraph.addNode(new GraphNode("T9_1", 441, 427)); // Finished
         
         // Waypoints:
         
-        schoolGraph.addNode(new GraphNode("P100", 53, 815));
-        schoolGraph.addNode(new GraphNode("P101", 65, 815));
-        schoolGraph.addNode(new GraphNode("P102", 93, 815));
-        schoolGraph.addNode(new GraphNode("P103", 115, 815));
-        schoolGraph.addNode(new GraphNode("P104", 146, 815));
-        schoolGraph.addNode(new GraphNode("P105", 161, 815));
-        schoolGraph.addNode(new GraphNode("P106", 161, 835));
-        schoolGraph.addNode(new GraphNode("P107", 161, 737));
-        schoolGraph.addNode(new GraphNode("P108", 146, 737));
-        schoolGraph.addNode(new GraphNode("P109", 89, 737));
-        schoolGraph.addNode(new GraphNode("P110", 66, 737));
-        schoolGraph.addNode(new GraphNode("P111", 146, 703));
-        schoolGraph.addNode(new GraphNode("P112", 161, 703));
-        schoolGraph.addNode(new GraphNode("P113", 161, 688));
-        schoolGraph.addNode(new GraphNode("P114", 161, 649));
-        schoolGraph.addNode(new GraphNode("P115", 161, 628));
-        schoolGraph.addNode(new GraphNode("P116", 161, 592));
-        schoolGraph.addNode(new GraphNode("P117", 161, 579));
-        schoolGraph.addNode(new GraphNode("P118", 161, 561));
-        schoolGraph.addNode(new GraphNode("P119", 161, 549));
-        schoolGraph.addNode(new GraphNode("P120", 196, 688));
-        schoolGraph.addNode(new GraphNode("P121", 226, 688));
-        schoolGraph.addNode(new GraphNode("P122", 242, 688));
-        schoolGraph.addNode(new GraphNode("P123", 242, 656));
-        schoolGraph.addNode(new GraphNode("P124", 242, 604));
-        schoolGraph.addNode(new GraphNode("P125", 242, 561));
-        schoolGraph.addNode(new GraphNode("P126", 242, 549));
-        schoolGraph.addNode(new GraphNode("P127", 272, 656));
-        schoolGraph.addNode(new GraphNode("P128", 292, 656));
-        schoolGraph.addNode(new GraphNode("P130", 315, 656));
-        schoolGraph.addNode(new GraphNode("P131", 334, 656));
-        schoolGraph.addNode(new GraphNode("P132", 346, 656));
-        schoolGraph.addNode(new GraphNode("P133", 366, 656));
-        schoolGraph.addNode(new GraphNode("P134", 379, 656));
-        schoolGraph.addNode(new GraphNode("P135", 398, 656));
-        schoolGraph.addNode(new GraphNode("P136", 275, 702));
-        schoolGraph.addNode(new GraphNode("P137", 292, 702));
-        schoolGraph.addNode(new GraphNode("P138", 292, 731));
-        schoolGraph.addNode(new GraphNode("P139", 325, 731));
-        schoolGraph.addNode(new GraphNode("P140", 325, 745));
-        schoolGraph.addNode(new GraphNode("P141", 364, 731));
-        schoolGraph.addNode(new GraphNode("P142", 395, 731));
+        schoolGraph.addNode(new GraphNode("P100", 39, 574));
+        schoolGraph.addNode(new GraphNode("P101", 52, 574));
+        schoolGraph.addNode(new GraphNode("P102", 90, 574));
+        schoolGraph.addNode(new GraphNode("P103", 113, 574));
+        schoolGraph.addNode(new GraphNode("P104", 128, 574));
+        schoolGraph.addNode(new GraphNode("P105", 155, 574));
+        schoolGraph.addNode(new GraphNode("P106", 155, 595));
+        schoolGraph.addNode(new GraphNode("P107", 155, 500));
+        schoolGraph.addNode(new GraphNode("P108", 143, 500));
+        schoolGraph.addNode(new GraphNode("P109", 83, 500));
+        schoolGraph.addNode(new GraphNode("P110", 54, 500));
+        schoolGraph.addNode(new GraphNode("P111", 143, 469));
+        schoolGraph.addNode(new GraphNode("P112", 155, 469));
+        schoolGraph.addNode(new GraphNode("P113", 155, 451));
+        schoolGraph.addNode(new GraphNode("P114", 155, 418));
+        schoolGraph.addNode(new GraphNode("P115", 155, 388));
+        schoolGraph.addNode(new GraphNode("P116", 155, 357));
+        schoolGraph.addNode(new GraphNode("P117", 155, 339));
+        schoolGraph.addNode(new GraphNode("P118", 155, 319));
+        schoolGraph.addNode(new GraphNode("P119", 155, 302));
+        schoolGraph.addNode(new GraphNode("P120", 185, 451));
+        schoolGraph.addNode(new GraphNode("P121", 207, 451));
+        schoolGraph.addNode(new GraphNode("P122", 232, 451));
+        schoolGraph.addNode(new GraphNode("P123", 232, 426));
+        schoolGraph.addNode(new GraphNode("P124", 232, 370));
+        schoolGraph.addNode(new GraphNode("P125", 232, 332));
+        schoolGraph.addNode(new GraphNode("P126", 232, 304));
+        schoolGraph.addNode(new GraphNode("P127", 262, 426));
+        schoolGraph.addNode(new GraphNode("P128", 316, 426));
+        schoolGraph.addNode(new GraphNode("P130", 321, 426));
+        schoolGraph.addNode(new GraphNode("P131", 348, 426));
+        schoolGraph.addNode(new GraphNode("P132", 366, 426));
+        schoolGraph.addNode(new GraphNode("P133", 387, 426));
+        schoolGraph.addNode(new GraphNode("P134", 408, 426));
+        schoolGraph.addNode(new GraphNode("P135", 422, 427));
+        schoolGraph.addNode(new GraphNode("P136", 285, 464));
+        schoolGraph.addNode(new GraphNode("P137", 316, 464));
+        schoolGraph.addNode(new GraphNode("P138", 316, 498));
+        schoolGraph.addNode(new GraphNode("P139", 346, 498));
+        schoolGraph.addNode(new GraphNode("P140", 346, 509));
+        schoolGraph.addNode(new GraphNode("P141", 389, 498));
+        schoolGraph.addNode(new GraphNode("P142", 423, 498)); // Finished
         
         // Rooms:
         
