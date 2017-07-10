@@ -262,7 +262,8 @@ public class DBInitialise extends javax.swing.JFrame {
     }
     
     private void nextInput() {        
-        if(!nachname.getText().equals("") && /*!vorname.getText().equals("") &&*/ (verhindert.getText().equals("0") || verhindert.getText().equals("1"))){
+        if(!nachname.getText().equals("") && /*!vorname.getText().equals("") &&*/ (verhindert.getText().equals("0") || verhindert.getText().equals("1")))
+        {
             insertToFile(String.valueOf(raum.getSelectedItem()), nachname.getText(), vorname.getText().equals("") ? "-" : vorname.getText(), Integer.parseInt(verhindert.getText()));
         
             nachname.setText("");
@@ -270,8 +271,18 @@ public class DBInitialise extends javax.swing.JFrame {
             verhindert.setText("");
             raum.setSelectedIndex(raum.getSelectedIndex() + 1);
             nachname.requestFocus();
-        } else
-            JOptionPane.showMessageDialog(null, "Fehlerhafte oder fehlende Eingabe!");
+        } 
+        else 
+        {
+            if(nachname.getText().equals("") && verhindert.getText().equals("")) 
+            {
+                
+            }
+            else 
+            {
+                JOptionPane.showMessageDialog(null, "Fehlerhafte oder fehlende Eingabe!");
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

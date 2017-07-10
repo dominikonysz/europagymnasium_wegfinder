@@ -192,8 +192,6 @@ public class Content extends javax.swing.JPanel{
      */
     private void findPath(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findPath
         groundPlan.drawPath((String) jComboBox1.getSelectedItem(),(String) jComboBox2.getSelectedItem());
-                
-        repaint();
     }//GEN-LAST:event_findPath
     
     /**
