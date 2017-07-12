@@ -214,6 +214,27 @@ public class GroundPlanPanel extends javax.swing.JPanel {
     private void buildGraph(){
         schoolGraph = new Graph();
                 // Nodes:
+                
+            // Basement:
+            
+        // Stairs:
+        
+        schoolGraph.addNode(new GraphNode("T4_-1", 170, 718));
+        schoolGraph.addNode(new GraphNode("T5_-1", 265, 718));
+        
+        // Waypoints:
+        
+        schoolGraph.addNode(new GraphNode("P-100", 170, 735)); // Spielekeller
+        schoolGraph.addNode(new GraphNode("P-101", 170, 750)); // K53
+        schoolGraph.addNode(new GraphNode("P-102", 265, 750)); // K59 + K62
+        
+        // Rooms:
+        
+        schoolGraph.addNode(new GraphNode("Saftladen", 154, 735)); // new connection required
+        schoolGraph.addNode(new GraphNode("Spielekeller", 98, 742));
+        schoolGraph.addNode(new GraphNode("Kunstraum 53", 180, 750));
+        schoolGraph.addNode(new GraphNode("Kunstraum 59", 244, 750)); // needs to be added
+        schoolGraph.addNode(new GraphNode("Technikraum 62", 275, 750)); // needs to be added
         
             // Ground floor:
         
@@ -276,7 +297,7 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addNode(new GraphNode("WC Herren", 482, 672));
         schoolGraph.addNode(new GraphNode("WC Damen", 466, 672));
         schoolGraph.addNode(new GraphNode("Mensa", 433, 684));
-        schoolGraph.addNode(new GraphNode("Saftladen", 528, 526));
+        //schoolGraph.addNode(new GraphNode("Saftladen", 528, 526));
         schoolGraph.addNode(new GraphNode("Raum 38", 493, 586));
         schoolGraph.addNode(new GraphNode("Raum 39", 493, 562));
         schoolGraph.addNode(new GraphNode("Raum 42", 493, 522));
@@ -565,14 +586,16 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addNode(new GraphNode("Raum 312", 168, 126));
         schoolGraph.addNode(new GraphNode("Raum 313", 144, 126));
         schoolGraph.addNode(new GraphNode("Raum 314", 120, 126)); // Finished
-        
-        // TODO: basement needs to be added
-        
-        
+                
                 // Edges:
             
             // Stairs to stairs:
         
+        // Basement to ground floor:
+        
+        schoolGraph.addEdge(schoolGraph.getNode("T4_-1"), schoolGraph.getNode("T4_0"), 17);
+        schoolGraph.addEdge(schoolGraph.getNode("T5_-1"), schoolGraph.getNode("T5_0"), 17);
+            
         // Ground floor to first floor:
         
         schoolGraph.addEdge(schoolGraph.getNode("T1_0"), schoolGraph.getNode("T1_1"), 17);
@@ -601,6 +624,11 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addEdge(schoolGraph.getNode("T3_2"), schoolGraph.getNode("T3_3"), 17);
         
             // Stairs to waypoints:
+            
+        // Basement:
+        
+        schoolGraph.addEdge(schoolGraph.getNode("T4_-1"), schoolGraph.getNode("P-100"), 1);
+        schoolGraph.addEdge(schoolGraph.getNode("T5_-1"), schoolGraph.getNode("P-102"), 1);
         
         // Ground floor:
         
@@ -643,12 +671,15 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         
             // Waypoints to waypoints:
         
+        // Basement:
+        
+        schoolGraph.addEdge(schoolGraph.getNode("P-100"), schoolGraph.getNode("P-101"), 2);
+            
         // Ground floor:
         
         schoolGraph.addEdge(schoolGraph.getNode("P000"), schoolGraph.getNode("P001"), 3.5);
-        schoolGraph.addEdge(schoolGraph.getNode("P000"), schoolGraph.getNode("P004"), 7.5);
+        schoolGraph.addEdge(schoolGraph.getNode("P000"), schoolGraph.getNode("P005"), 7.5);
         schoolGraph.addEdge(schoolGraph.getNode("P001"), schoolGraph.getNode("P002"), 17);
-        schoolGraph.addEdge(schoolGraph.getNode("P001"), schoolGraph.getNode("P005"), 7.5);
         schoolGraph.addEdge(schoolGraph.getNode("P002"), schoolGraph.getNode("P003"), 4);
         schoolGraph.addEdge(schoolGraph.getNode("P004"), schoolGraph.getNode("P005"), 3.5);
         schoolGraph.addEdge(schoolGraph.getNode("P004"), schoolGraph.getNode("P008"), 10);
@@ -685,7 +716,7 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addEdge(schoolGraph.getNode("P043"), schoolGraph.getNode("P044"), 10);
         
         //Dirty Connetion added here
-        schoolGraph.addEdge(schoolGraph.getNode("P027"), schoolGraph.getNode("P023"), 17);
+        schoolGraph.addEdge(schoolGraph.getNode("P027"), schoolGraph.getNode("P024"), 17);
         
         // First floor:
         
@@ -799,18 +830,26 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addEdge(schoolGraph.getNode("P312"), schoolGraph.getNode("P314"), 3);
         
             // Waypoints to rooms:
+            
+        // Basement:
+        // TODO(if needed): change senseless distances
+        schoolGraph.addEdge(schoolGraph.getNode("P-100"), schoolGraph.getNode("Saftladen"), 0.1);
+        schoolGraph.addEdge(schoolGraph.getNode("P-101"), schoolGraph.getNode("Kunstraum 53"), 0.1);
+        schoolGraph.addEdge(schoolGraph.getNode("P-102"), schoolGraph.getNode("Kunstraum 59"), 0.1);
+        schoolGraph.addEdge(schoolGraph.getNode("P-102"), schoolGraph.getNode("Technikraum 62"), 0.1);
+        // dirty connection
+        schoolGraph.addEdge(schoolGraph.getNode("Saftladen"), schoolGraph.getNode("Spielekeller"), 0.11);
         
         // Ground floor:
         
         schoolGraph.addEdge(schoolGraph.getNode("P007"), schoolGraph.getNode("Bibliothek"), 0.1);
-        schoolGraph.addEdge(schoolGraph.getNode("P004"), schoolGraph.getNode("Foyer"), 13);
+        schoolGraph.addEdge(schoolGraph.getNode("P005"), schoolGraph.getNode("Foyer"), 13);
         schoolGraph.addEdge(schoolGraph.getNode("P007"), schoolGraph.getNode("Foyer"), 7);
         schoolGraph.addEdge(schoolGraph.getNode("P008"), schoolGraph.getNode("Foyer"), 15);
         schoolGraph.addEdge(schoolGraph.getNode("P026"), schoolGraph.getNode("Foyer"), 19);
         schoolGraph.addEdge(schoolGraph.getNode("P002"), schoolGraph.getNode("WC Herren"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P003"), schoolGraph.getNode("WC Damen"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P003"), schoolGraph.getNode("Mensa"), 0.1);
-        schoolGraph.addEdge(schoolGraph.getNode("T4_0"), schoolGraph.getNode("Saftladen"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P010"), schoolGraph.getNode("Raum 38"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P011"), schoolGraph.getNode("Raum 39"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P012"), schoolGraph.getNode("Raum 42"), 0.1);
@@ -823,7 +862,6 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         schoolGraph.addEdge(schoolGraph.getNode("P023"), schoolGraph.getNode("Werkraum 24"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P022"), schoolGraph.getNode("Werkraum 27"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P016"), schoolGraph.getNode("Werkraum 32"), 0.1);
-        schoolGraph.addEdge(schoolGraph.getNode("T4_0"), schoolGraph.getNode("Kunstraum 53"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P028"), schoolGraph.getNode("Raum 63"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P029"), schoolGraph.getNode("Raum 64"), 0.1);
         schoolGraph.addEdge(schoolGraph.getNode("P030"), schoolGraph.getNode("Raum 65"), 0.1);

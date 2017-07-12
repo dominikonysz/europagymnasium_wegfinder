@@ -174,7 +174,7 @@
         <Component class="javax.swing.JComboBox" name="raum">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="132">
+              <StringArray count="136">
                 <StringItem index="0" value="Raum 38"/>
                 <StringItem index="1" value="Raum 39"/>
                 <StringItem index="2" value="Raum 42"/>
@@ -302,11 +302,15 @@
                 <StringItem index="124" value="Werkraum 24"/>
                 <StringItem index="125" value="Werkraum 27"/>
                 <StringItem index="126" value="Werkraum 32"/>
-                <StringItem index="127" value="Mensa"/>
-                <StringItem index="128" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
-                <StringItem index="129" value="B&#xfc;ro der stellv. Schulleitung"/>
-                <StringItem index="130" value="Saftladen"/>
-                <StringItem index="131" value="Bibliothek"/>
+                <StringItem index="127" value="Kunstraum 53"/>
+                <StringItem index="128" value="Kunstraum 59"/>
+                <StringItem index="129" value="Technikraum 62"/>
+                <StringItem index="130" value="Mensa"/>
+                <StringItem index="131" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
+                <StringItem index="132" value="B&#xfc;ro der stellv. Schulleitung"/>
+                <StringItem index="133" value="Saftladen"/>
+                <StringItem index="134" value="Spielekeller"/>
+                <StringItem index="135" value="Bibliothek"/>
               </StringArray>
             </Property>
           </Properties>

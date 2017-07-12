@@ -78,7 +78,7 @@
         <Component class="javax.swing.JComboBox" name="jComboBox1">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="136">
+              <StringArray count="140">
                 <StringItem index="0" value="Foyer"/>
                 <StringItem index="1" value="Raum 38"/>
                 <StringItem index="2" value="Raum 39"/>
@@ -207,14 +207,18 @@
                 <StringItem index="125" value="Werkraum 24"/>
                 <StringItem index="126" value="Werkraum 27"/>
                 <StringItem index="127" value="Werkraum 32"/>
-                <StringItem index="128" value="Mensa"/>
-                <StringItem index="129" value="Lehrerzimmer"/>
-                <StringItem index="130" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
-                <StringItem index="131" value="B&#xfc;ro der stellv. Schulleitung"/>
-                <StringItem index="132" value="Saftladen"/>
-                <StringItem index="133" value="Bibliothek"/>
-                <StringItem index="134" value="WC Damen"/>
-                <StringItem index="135" value="WC Herren"/>
+                <StringItem index="128" value="Kunstraum 53"/>
+                <StringItem index="129" value="Kunstraum 59"/>
+                <StringItem index="130" value="Technikraum 62"/>
+                <StringItem index="131" value="Mensa"/>
+                <StringItem index="132" value="Lehrerzimmer"/>
+                <StringItem index="133" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
+                <StringItem index="134" value="B&#xfc;ro der stellv. Schulleitung"/>
+                <StringItem index="135" value="Saftladen"/>
+                <StringItem index="136" value="Spielekeller"/>
+                <StringItem index="137" value="Bibliothek"/>
+                <StringItem index="138" value="WC Damen"/>
+                <StringItem index="139" value="WC Herren"/>
               </StringArray>
             </Property>
           </Properties>
@@ -222,7 +226,7 @@
         <Component class="javax.swing.JComboBox" name="jComboBox2">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="136">
+              <StringArray count="140">
                 <StringItem index="0" value="Foyer"/>
                 <StringItem index="1" value="Raum 38"/>
                 <StringItem index="2" value="Raum 39"/>
@@ -351,14 +355,18 @@
                 <StringItem index="125" value="Werkraum 24"/>
                 <StringItem index="126" value="Werkraum 27"/>
                 <StringItem index="127" value="Werkraum 32"/>
-                <StringItem index="128" value="Mensa"/>
-                <StringItem index="129" value="Lehrerzimmer"/>
-                <StringItem index="130" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
-                <StringItem index="131" value="B&#xfc;ro der stellv. Schulleitung"/>
-                <StringItem index="132" value="Saftladen"/>
-                <StringItem index="133" value="Bibliothek"/>
-                <StringItem index="134" value="WC Damen"/>
-                <StringItem index="135" value="WC Herren"/>
+                <StringItem index="128" value="Kunstraum 53"/>
+                <StringItem index="129" value="Kunstraum 59"/>
+                <StringItem index="130" value="Technikraum 62"/>
+                <StringItem index="131" value="Mensa"/>
+                <StringItem index="132" value="Lehrerzimmer"/>
+                <StringItem index="133" value="B&#xfc;ro der Schulleitung/Sekretariat"/>
+                <StringItem index="134" value="B&#xfc;ro der stellv. Schulleitung"/>
+                <StringItem index="135" value="Saftladen"/>
+                <StringItem index="136" value="Spielekeller"/>
+                <StringItem index="137" value="Bibliothek"/>
+                <StringItem index="138" value="WC Damen"/>
+                <StringItem index="139" value="WC Herren"/>
               </StringArray>
             </Property>
           </Properties>
