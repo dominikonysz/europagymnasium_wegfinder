@@ -202,7 +202,9 @@ public class Content extends javax.swing.JPanel{
      * @param evt The event which called the method.
      */
     private void print(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_print
-        BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        groundPlan.print();
+        
+        /*BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
         paint(img.createGraphics());
         
         // Modify this String to alter the location to which the image is saved.
@@ -226,9 +228,9 @@ public class Content extends javax.swing.JPanel{
             color.add(COLOR);
             //job.print(doc, color);         Nichts Drucken beim Ausprobieren!
  
-        } catch (/*PrintException | */FileNotFoundException e) {
+        } catch (PrintException | FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }//GEN-LAST:event_print
 
     private void openSearch(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSearch

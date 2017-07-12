@@ -12,6 +12,21 @@ import java.awt.Graphics;
 import java.text.NumberFormat;
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import static javax.print.attribute.standard.Chromaticity.COLOR;
 import javax.swing.JLabel;
 import listenklassen.*;
 
@@ -102,7 +117,37 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         */
         
         repaint();
-    } 
+    }
+    
+    public void print() {
+        BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        paint(img.createGraphics());
+        
+        // Modify this String to alter the location to which the image is saved.
+        String filename = ".\\image.jpg";
+        
+        try {
+            ImageIO.write(img, "jpg", new File(filename));
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        
+        try {
+            
+            FileInputStream textStream = new FileInputStream(filename);
+            
+            DocFlavor formatSTREAM = DocFlavor.INPUT_STREAM.JPEG;
+            PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+            DocPrintJob job = service.createPrintJob();
+            Doc doc = new SimpleDoc(textStream, formatSTREAM, null);
+            PrintRequestAttributeSet color = new HashPrintRequestAttributeSet();
+            color.add(COLOR);
+            //job.print(doc, color);         Nichts Drucken beim Ausprobieren!
+ 
+        } catch (/*PrintException | */FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     
     /**
      * Paints the Panel with the background and the path 
