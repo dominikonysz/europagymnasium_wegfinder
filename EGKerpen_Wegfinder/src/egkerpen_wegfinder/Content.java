@@ -5,32 +5,13 @@
 
 package egkerpen_wegfinder;
 
-import graphklassen.Graph;
-import graphklassen.GraphNode;
-import listenklassen.List;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.NumberFormat;
-import javax.imageio.ImageIO;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintException;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import static javax.print.attribute.standard.Chromaticity.COLOR;
-import javax.swing.ImageIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
@@ -41,13 +22,7 @@ public class Content extends javax.swing.JPanel{
     private JFrame frame;
     private GroundPlanPanel groundPlan;
     private int xOffset, yOffset;
-    
-    /**
-     * Include these attributes to check every path of the graph.
-     */
-    // private String[] s1 = { "Foyer", "Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Mensa", "Lehrerzimmer", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftladen", "Bibliothek", "WC Damen", "WC Herren" };
-    // private String[] s2 = { "Foyer", "Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Mensa", "Lehrerzimmer", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftladen", "Bibliothek", "WC Damen", "WC Herren" };
-    // private int i, j;
+    private lSuche lS;
     
     /**
      * Constructor. Initializes the GUI components and attributes of the class.
@@ -60,11 +35,14 @@ public class Content extends javax.swing.JPanel{
         
         groundPlan = new GroundPlanPanel(this);
         frame.add(groundPlan);
-        /**
-        * Include these lines to check every path of the graph.
-        */
-        // i = 0;
-        // j = 0;
+        
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('s'), "tse");
+        this.getActionMap().put("tse", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jButton6ActionPerformed(null);
+            }
+        });
     }
 
     /**
@@ -82,7 +60,6 @@ public class Content extends javax.swing.JPanel{
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
@@ -111,13 +88,6 @@ public class Content extends javax.swing.JPanel{
             }
         });
 
-        jButton4.setText("Neustart");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newInit(evt);
-            }
-        });
-
         jButton5.setText("Beenden");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,19 +109,17 @@ public class Content extends javax.swing.JPanel{
             .addGroup(pInputsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -165,7 +133,6 @@ public class Content extends javax.swing.JPanel{
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
-                    .addComponent(jButton4)
                     .addComponent(jButton5)
                     .addComponent(jButton6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -203,34 +170,6 @@ public class Content extends javax.swing.JPanel{
      */
     private void print(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_print
         groundPlan.print();
-        
-        /*BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-        paint(img.createGraphics());
-        
-        // Modify this String to alter the location to which the image is saved.
-        String filename = ".\\image.jpg";
-        
-        try {
-            ImageIO.write(img, "jpg", new File(filename));
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        
-        try {
-            
-            FileInputStream textStream = new FileInputStream(filename);
-            
-            DocFlavor formatSTREAM = DocFlavor.INPUT_STREAM.JPEG;
-            PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-            DocPrintJob job = service.createPrintJob();
-            Doc doc = new SimpleDoc(textStream, formatSTREAM, null);
-            PrintRequestAttributeSet color = new HashPrintRequestAttributeSet();
-            color.add(COLOR);
-            //job.print(doc, color);         Nichts Drucken beim Ausprobieren!
- 
-        } catch (PrintException | FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }//GEN-LAST:event_print
 
     private void openSearch(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSearch
@@ -238,21 +177,25 @@ public class Content extends javax.swing.JPanel{
         s.setVisible(true);
     }//GEN-LAST:event_openSearch
 
-    private void newInit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newInit
-        DBAktualisiere.main(null);
-        
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.dispose();
-    }//GEN-LAST:event_newInit
-
     private void quit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quit
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
     }//GEN-LAST:event_quit
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        lSuche lS = new lSuche(this);
-        lS.setVisible(true);
+        try {
+            if(lS.isDisplayable()) {
+                lS.setVisible(true);
+            }
+            else {
+                lS = new lSuche(this);
+                lS.setVisible(true);
+            }
+        }
+        catch(NullPointerException npe) {
+            lS = new lSuche(this);
+            lS.setVisible(true);
+        } 
     }//GEN-LAST:event_jButton6ActionPerformed
    
     /**
@@ -268,6 +211,7 @@ public class Content extends javax.swing.JPanel{
         groundPlan.setSize(Math.min(this.getHeight() - 51, this.getWidth()), Math.min(this.getHeight() - 51, this.getWidth()));
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Getter">
     /**
      * Returns the GroundPlanPanel contained in the content panel.
      * @return 
@@ -275,12 +219,20 @@ public class Content extends javax.swing.JPanel{
     public GroundPlanPanel getGroundPlan() {
         return groundPlan;
     }
+    
+    /**
+     * Returns the parented frame of the Content object.
+     * @return 
+     */
+    public JFrame getParentFrame() {
+        return frame;
+    }
+    //</editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JComboBox jComboBox1;

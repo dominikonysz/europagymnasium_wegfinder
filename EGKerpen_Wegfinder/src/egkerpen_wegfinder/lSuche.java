@@ -8,8 +8,14 @@ package egkerpen_wegfinder;
 import db.DBController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import javafx.scene.input.KeyCode;
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import listenklassen.List_extended;
@@ -65,7 +71,7 @@ public class lSuche extends javax.swing.JFrame {
                  
                  List_extended<List_extended<String>> l = con.getResults();
                  
-                 if (con.getResultsAmount() <= 5){
+                 if (con.getResultsAmount() <= 8){
                      String[][] s = new String[con.getResultsAmount()][4];
             
                     l.toFirst();
@@ -91,6 +97,18 @@ public class lSuche extends javax.swing.JFrame {
             }
              
         });
+        
+        // Exit the TeacherSearchEngine with ESC
+        JPanel dummy = new JPanel();
+        this.add(dummy);
+        lSuche lS = this;
+        dummy.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "tse");
+        dummy.getActionMap().put("tse", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                lS.dispose();
+            }
+        });
     }
 
     /**
@@ -107,8 +125,8 @@ public class lSuche extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Lehrersuche");
 
-        jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -121,21 +139,21 @@ public class lSuche extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(321, Short.MAX_VALUE))
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(360, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -164,14 +182,18 @@ public class lSuche extends javax.swing.JFrame {
     private void makeJButton(String msg){
         JButton nB = new JButton();
         buttons[lbIterator] = nB;
-        nB.setBounds(200, 110 + ButtonOffset, 100, 27);
+        nB.setBounds(180, 60 + ButtonOffset, 100, 27);
         nB.setText(msg);
+        
+        lSuche lsuche = this;
         
         nB.addActionListener(new ActionListener(){
             
             @Override
             public void actionPerformed(ActionEvent e){
                 cont.getGroundPlan().drawPath("Foyer", msg);
+                cont.getParentFrame().requestFocus();
+                lsuche.setVisible(false);
             }
         });
         
@@ -186,7 +208,7 @@ public class lSuche extends javax.swing.JFrame {
     private void makeJLabel(String msg){
         JLabel nL = new JLabel();
         label[lbIterator] = nL;
-        nL.setBounds(70, 110 + ButtonOffset, 100, 27);
+        nL.setBounds(30, 60 + ButtonOffset, 100, 27);
         nL.setText(msg);
         jPanel1.add(nL); 
         
@@ -194,7 +216,7 @@ public class lSuche extends javax.swing.JFrame {
 
     /**
      * Adds new teacher with name and room
-     * @param name
+     * @param name 
      * @param room 
      */
     private void addNewTeacher(String name, String room){

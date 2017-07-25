@@ -9,9 +9,10 @@ import graphklassen.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.text.NumberFormat;
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,13 +22,17 @@ import javax.imageio.ImageIO;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
+import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import static javax.print.attribute.standard.Chromaticity.COLOR;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.KeyStroke;
 import listenklassen.*;
 
 /**
@@ -45,8 +50,9 @@ public class GroundPlanPanel extends javax.swing.JPanel {
     private int xOffset, yOffset;
     private Content content;
     
-    private boolean drawAll;
+    private boolean debug;
     JLabel[] nodeNames;
+    
     
     /**
      * Creates new form GroundPlanPanel
@@ -61,8 +67,18 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         path = new List<>();
         this.content = content;
         
-        drawAll = false;                // default: false
+        // debugging
+        debug = false;
         nodeNames = new JLabel[0];
+        
+        // Switching debug mode on and off with Ctrl + D
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_MASK), "debug");
+        this.getActionMap().put("debug", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchDebugMode();
+            }
+        });
     }
 
     /**
@@ -88,38 +104,40 @@ public class GroundPlanPanel extends javax.swing.JPanel {
 
     /**
      * Draws the path from 'start' to 'dest' on the background image.
-     * @param start
-     * @param dest 
+     * @param start name of the start node
+     * @param dest name of the destination node
      */
     public void drawPath(String start, String dest){
-        /**
-        * Exclude this line to check every path of the graph.
-        */
         path = d.getPath(schoolGraph.getNode(start),schoolGraph.getNode(dest));
         
         
-        // For debugging use only
+        // For debugging use only:
+        // Writes all nodes of the path into the console
         path.toFirst();
         while(path.hasAccess()){
             System.out.println(path.getObject().getName());
             path.next();
         }
         path.toFirst();
-        /**
-        * Include these lines to check every path of the graph.
-        */
-        /* path = d.getPath(schoolGraph.getNode(s1[i]), schoolGraph.getNode(s2[j]));
-        
-        if(j == s2.length - 1){
-            j = 0;
-            i++;
-        } else j++;
-        */
         
         repaint();
     }
     
+    /**
+     * Prints the content of the panel with the generated path.
+     */
     public void print() {
+        // Add the start and destination node names to the panel before printing
+        path.toFirst();
+        JLabel start = new JLabel("Von: " + path.getObject().getName());
+        path.toLast();
+        JLabel dest = new JLabel("Nach: " + path.getObject().getName());
+        start.setBounds(5, 0, 100, 20);
+        dest.setBounds(5, 18, 100, 20);
+        this.add(start);
+        this.add(dest);
+        
+        
         BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
         paint(img.createGraphics());
         
@@ -142,33 +160,37 @@ public class GroundPlanPanel extends javax.swing.JPanel {
             Doc doc = new SimpleDoc(textStream, formatSTREAM, null);
             PrintRequestAttributeSet color = new HashPrintRequestAttributeSet();
             color.add(COLOR);
-            //job.print(doc, color);         Nichts Drucken beim Ausprobieren!
+            job.print(doc, color);
  
-        } catch (/*PrintException | */FileNotFoundException e) {
+        } catch (PrintException | FileNotFoundException e) {
             e.printStackTrace();
         }
+        
+        // remove the labels afterwards
+        this.remove(start);
+        this.remove(dest);
     }
     
     /**
      * Paints the Panel with the background and the path 
-     * considering the window scale.
+     * considering the window scale.(Debugmode off)
+     * Paints all nodes with the associated names.(Debugmode on)
      * @param g 
      */
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
+        // Update all offsets and scale the panel with the window size
         updateOffsets();
         this.setBounds(xOffset, yOffset, bgSideLength, bgSideLength);
         g.drawImage(gpImage, 0, 0, bgSideLength, bgSideLength,this);
         
-        NumberFormat n = NumberFormat.getInstance();
-        n.setMaximumFractionDigits(2);
-        
-        if(!path.isEmpty()){
-            g.setColor(Color.red);
-            GraphNode n1, n2;
-            
-            if(!drawAll) {
+        if(!debug) {
+            // Draw the path if one exists and debugging is disabled
+            if(!path.isEmpty()) {
+                g.setColor(Color.red);
+                GraphNode n1, n2;
+                
                 path.toFirst();
 
                 n1 = path.getObject();
@@ -194,46 +216,51 @@ public class GroundPlanPanel extends javax.swing.JPanel {
                 path.toFirst();
                 g.fillRect((int) (diff * path.getObject().getX()) - 2, 
                         (int) (diff * path.getObject().getY()) - 2, 5, 5);
-
+                
                 path.toLast();
                 g.fillRect((int) (diff * path.getObject().getX()) - 2, 
                         (int) (diff * path.getObject().getY()) - 2, 5, 5);
             }
-            // Only for debugging purposes:
-            // Paints all nodes from the graph with the corresponding designation.
+        }
+        else {
+            // Draw all nodes and the associated names if debugging is enabled
+            List<GraphNode> nodes = schoolGraph.getNodes();
+            nodes.toFirst();
+            // determine the amount of nodes in the whole graph
+            int nodesCount = 0;
+            while(nodes.hasAccess()) {
+                nodesCount++;
+                nodes.next();
+            }
+            // Create new array for the nodes names if it does not already exist.
+            // Otherwise make all existing node names visible.
+            if(nodeNames.length == 0) {
+                nodeNames = new JLabel[nodesCount];
+            }
             else {
-                List<GraphNode> nodes = schoolGraph.getNodes();
-                nodes.toFirst();
-                int nodesCount = 0;
-                while(nodes.hasAccess()) {
-                    nodesCount++;
-                    nodes.next();
+                for(JLabel label : nodeNames) {
+                    label.setVisible(true);
                 }
-                if(nodeNames.length == 0) {
-                    nodeNames = new JLabel[nodesCount];
+            }
+            nodes.toFirst();
+            int counter = 0;
+            GraphNode node;
+            // Draw every node with the name next to it
+            g.setColor(Color.RED);
+            while(nodes.hasAccess()) {
+                node = nodes.getObject();
+                g.fillRect((int) (diff * node.getX())-1, (int) (diff * node.getY())-1, 3, 3);
+                if(nodeNames[counter] == null) {
+                    nodeNames[counter] = new JLabel(node.getName());
+                    nodeNames[counter].setFont(new Font(nodeNames[counter].getFont().getName(), Font.PLAIN, 8));
+                    nodeNames[counter].setBounds((int) (diff * node.getX()),(int) (diff *  node.getY()), 100, 8);
+                    this.add(nodeNames[counter]);
                 }
                 else {
-                    
+                    nodeNames[counter].setLocation((int) (diff * node.getX()),(int) (diff *  node.getY()));
                 }
-                nodes.toFirst();
-                int counter = 0;
-                GraphNode node;
-                System.out.println(diff);
-                while(nodes.hasAccess()) {
-                    node = nodes.getObject();
-                    g.fillRect((int) (diff * node.getX())-1, (int) (diff * node.getY())-1, 3, 3);
-                    if(nodeNames[counter] == null) {
-                        nodeNames[counter] = new JLabel(node.getName());
-                        nodeNames[counter].setFont(new Font(nodeNames[counter].getFont().getName(), Font.PLAIN, 8));
-                        nodeNames[counter].setBounds((int) (diff * node.getX()),(int) (diff *  node.getY()), 100, 8);
-                        this.add(nodeNames[counter]);
-                    }
-                    else {
-                        nodeNames[counter].setLocation((int) (diff * node.getX()),(int) (diff *  node.getY()));
-                    }
-                    counter++;
-                    nodes.next();
-                }
+                counter++;
+                nodes.next();
             }
         }
     }
@@ -249,8 +276,22 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         diff = (double) bgSideLength / standardSideLength;
     }
     
-    public void drawAllPoints(boolean state) {
-        drawAll = state;
+    /**
+     * Switches the debug mode on and off depending on the previous state.
+     */
+    private void switchDebugMode() {
+        if(debug == false) {
+            System.out.println("Debug Mode enabled");
+            debug = true;
+            repaint();
+        }
+        else {
+            System.out.println("Debug Mode disabled");
+            debug = false;
+            for(JLabel label : nodeNames) {
+                label.setVisible(false);
+            }
+        }
     }
     
     /**

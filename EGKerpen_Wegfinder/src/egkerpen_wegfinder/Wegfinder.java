@@ -6,11 +6,31 @@
 package egkerpen_wegfinder;
 
 import db.DBController;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import listenklassen.List_extended;
 
 /**
@@ -22,6 +42,8 @@ public class Wegfinder extends javax.swing.JFrame {
     DBController con;
     Writer fw;
     File f;
+    String[] allRooms;
+    boolean lnInputStarted, fnInputStarted;
     
     /**
      * Creates new form Wegfinder
@@ -34,13 +56,7 @@ public class Wegfinder extends javax.swing.JFrame {
         super(title);
         initComponents();
         con = DBController.getInstance();
-        
-        try {
-            f = new File("Portable.txt");
-            fw = new FileWriter(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        allRooms = new String[] {"Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Kunstraum 53", "Kunstraum 59", "Technikraum 62", "Mensa", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftladen", "Spielekeller", "Bibliothek"};
     }
 
     /**
@@ -131,50 +147,227 @@ public class Wegfinder extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMI_LehrerHinzufuegenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_LehrerHinzufuegenActionPerformed
-        String raum = JOptionPane.showInputDialog("Raum:");
-        String name = JOptionPane.showInputDialog("Nachname:");
-        String vorname = JOptionPane.showInputDialog("Vorname:");
-        vorname = vorname.equals("") ? "-" : vorname;
-        String verhindert = JOptionPane.showInputDialog("Verhindert(0|1):");
-        verhindert = !(verhindert.equals("0") || verhindert.equals("1")) ? "0" : verhindert;
-        con.executeUpdate("INSERT INTO raumverteilung VALUES ('" + raum + "', '" + name + "', '" + vorname + "', " + verhindert + ")");
-        con.executeUpdate("INSERT INTO lehrer VALUES ('" + name + "', '" + vorname + "')");
+        Wegfinder w = this;
+        
+        lnInputStarted = true;
+        fnInputStarted = true;
+        JFrame frame = new JFrame("Lehrer hinzufügen");
+        frame.setSize(280, 200);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        
+        JComboBox rooms = new JComboBox();
+        rooms.setModel(new DefaultComboBoxModel(allRooms));
+        rooms.setBounds(19, 20, frame.getWidth() - 43, 23);
+        
+        JTextField lastname = new JTextField("Nachname");
+        lastname.setBounds(19, 50, frame.getWidth() - 43, 23);
+        lastname.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(lnInputStarted) {
+                    lastname.setText("");
+                    lnInputStarted = false;
+                }
+            }
+        });
+        
+        JTextField firstname = new JTextField("Vorname");
+        firstname.setBounds(19, 80, frame.getWidth() - 43, 23);
+        firstname.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(fnInputStarted) {
+                    firstname.setText("");
+                    fnInputStarted = false;
+                }
+            }
+        });
+        
+        JCheckBox prevented = new JCheckBox("Verhindert");
+        prevented.setBounds(19, 110, frame.getWidth() - 43, 23);
+        
+        JButton bInsert = new JButton("Hinzufügen");
+        bInsert.setBounds(19, 140, frame.getWidth() - 43, 23);
+        bInsert.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(lastname.getText().equals("") || lastname.getText().equals("Nachname") || firstname.getText().equals("Vorname")) {
+                    JOptionPane.showMessageDialog(w, "Bitte einen gültigen Lehrer eingeben");
+                }
+                else {
+                    con.executeQuery("SELECT * FROM lehrer WHERE nachname = '" + lastname.getText() + "' AND vorname = '" + (firstname.getText().equals("") ? "-" : firstname.getText()) + "'");
+                    if(con.getResultsAmount() == 0) {
+                        con.executeUpdate("INSERT INTO raumverteilung VALUES ('" 
+                                + rooms.getSelectedItem() + "', '" + lastname.getText() + "', '" 
+                                + (firstname.getText().equals("") ? "-" : firstname.getText()) 
+                                + "', " + (prevented.isSelected() ? 1 : 0) + ")");
+                        con.executeUpdate("INSERT INTO lehrer VALUES ('" + lastname.getText() 
+                                + "', '" + (firstname.getText().equals("") ? "-" : firstname.getText()) + "')");
+                        JOptionPane.showMessageDialog(frame, firstname.getText() + " " 
+                                + lastname.getText() + " wurde erfolgreich in " 
+                                + rooms.getSelectedItem() + " eingetragen");
+                        lnInputStarted = true;
+                        fnInputStarted = true;
+                        rooms.setSelectedIndex(0);
+                        lastname.setText("Nachname");
+                        firstname.setText("Vorname");
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(w, "Lehrer bereits vorhanden");
+                    }
+                }
+            }
+        });
+        
+        frame.getContentPane().add(rooms);
+        frame.getContentPane().add(lastname);
+        frame.getContentPane().add(firstname);
+        frame.getContentPane().add(prevented);
+        frame.getContentPane().add(bInsert);
+        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMI_LehrerHinzufuegenActionPerformed
 
     private void jMI_LehrerEntfernenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_LehrerEntfernenActionPerformed
-        String name = JOptionPane.showInputDialog("Name:");
-        con.executeUpdate("DELETE FROM raumverteilung WHERE nachname = '" + name + "'");
+        JFrame frame = new JFrame("Lehrer entfernen");
+        frame.setSize(280, 120);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        
+        JComboBox teachers = new JComboBox();
+        teachers.setModel(new DefaultComboBoxModel(getAllTeachersNames()));
+        teachers.setBounds(19, 20, frame.getWidth() - 43, 23);
+        
+        JButton bRemove = new JButton("Löschen");
+        bRemove.setBounds(19, 50, frame.getWidth() - 43, 23);
+        bRemove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String item = (String) teachers.getSelectedItem();
+                if(item != null) {
+                    String firstname = item.substring(0, item.indexOf(" "));
+                    String lastname = item.substring(item.indexOf(" ") + 1);
+                    con.executeUpdate("DELETE FROM raumverteilung WHERE nachname = '" 
+                            + lastname + "' AND vorname = '" + firstname + "'");
+                    con.executeUpdate("DELETE FROM lehrer WHERE nachname = '" 
+                            + lastname + "' AND vorname = '" + firstname + "'");
+                    JOptionPane.showMessageDialog(frame, "\"" + firstname + " " + lastname + "\" wurde erfolgreich entfernt");
+                    teachers.setModel(new DefaultComboBoxModel(getAllTeachersNames()));
+                }
+                else {
+                    JOptionPane.showMessageDialog(frame, "Bitte einen Lehrer auswählen");
+                }
+            }
+        });
+        
+        frame.getContentPane().add(teachers);
+        frame.getContentPane().add(bRemove);
+        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMI_LehrerEntfernenActionPerformed
 
     private void jMI_RaumAendernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_RaumAendernActionPerformed
-        String raum = JOptionPane.showInputDialog("Raum:");
-        String name = JOptionPane.showInputDialog("Nachname:");
-        con.executeUpdate("UPDATE raumverteilung SET raum = + '" + raum + "' WHERE nachname = '" + name + "'");
+        JFrame frame = new JFrame("Raum ändern");
+        frame.setSize(280, 150);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        
+        JComboBox rooms = new JComboBox();
+        rooms.setModel(new DefaultComboBoxModel(allRooms));
+        rooms.setBounds(19, 20, frame.getWidth() - 43, 23);
+        
+        JComboBox teachers = new JComboBox();
+        teachers.setModel(new DefaultComboBoxModel(getAllTeachersLastName()));
+        teachers.setBounds(19, 50, frame.getWidth() - 43, 23);
+        teachers.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    rooms.setSelectedItem(getRoomOfTeacher((String) e.getItem()));
+                }
+            }
+        });
+        
+        rooms.setSelectedItem(getRoomOfTeacher((String) teachers.getSelectedItem()));
+        
+        JButton bUpdate = new JButton("Ändern");
+        bUpdate.setBounds(19, 80, frame.getWidth() - 43, 23);
+        bUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                con.executeUpdate("UPDATE raumverteilung SET raum = '" + rooms.getSelectedItem() 
+                        + "' WHERE nachname = '" + teachers.getSelectedItem() + "'");
+                JOptionPane.showMessageDialog(frame, "Raum von \"" + teachers.getSelectedItem() + "\" wurde erfolgreich zu " + rooms.getSelectedItem() + " geändert");
+            }
+        });
+        
+        frame.getContentPane().add(rooms);
+        frame.getContentPane().add(teachers);
+        frame.getContentPane().add(bUpdate);
+        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMI_RaumAendernActionPerformed
 
     private void jMI_LehrerlisteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_LehrerlisteActionPerformed
         List_extended<List_extended<String>> lehrerList;
-        con.executeQuery("SELECT DISTINCT * FROM lehrer ORDER BY nachname");
+        //con.executeQuery("SELECT DISTINCT * FROM lehrer ORDER BY nachname");
+        con.executeQuery("SELECT lehrer.nachname, lehrer.vorname, raumverteilung.raum FROM lehrer LEFT JOIN raumverteilung ON lehrer.nachname = raumverteilung.nachname AND lehrer.vorname = raumverteilung.vorname ORDER BY lehrer.nachname");
         lehrerList = con.getResults();
-        String[][] lehrer = new String[con.getResultsAmount()][2];
+        String[][] lehrer = new String[con.getResultsAmount()][3];
             
-            lehrerList.toFirst();
-            for(int i = 0; i < lehrer.length; i++){
-                List_extended<String> l2 = lehrerList.getObject();
-                l2.toFirst();
-                
-                for(int j = 0; j < lehrer[i].length; j++){
-                    lehrer[i][j] = l2.getObject();
-                    l2.next();
-                }
-                
-                lehrerList.next();
+        lehrerList.toFirst();
+        for(int i = 0; i < lehrer.length; i++){
+            List_extended<String> l2 = lehrerList.getObject();
+            l2.toFirst();
+
+            for(int j = 0; j < lehrer[i].length; j++){
+                lehrer[i][j] = l2.getObject();
+                l2.next();
             }
-        String table = "";
-        for(String[] s : lehrer) {
-            table += s[0] + ", " + s[1] + "\n";
+
+            lehrerList.next();
         }
-        JOptionPane.showMessageDialog(this, table);
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        FontMetrics fm = g2d.getFontMetrics();
+
+        String table = "";
+        String newRow;
+        for(String[] s : lehrer) {
+            newRow = "  " + s[0] + ", " + s[1];
+            int missingSpace = 150 - fm.stringWidth(newRow);
+            for (int i = 0; i < missingSpace / fm.stringWidth(" "); i++) {
+                newRow += " ";
+            }
+            newRow += s[2] + "\n";
+            table += newRow;
+            newRow = "";
+        }
+        g2d.dispose();
+        
+        // new window with a textarea for all teachers
+        JFrame frame = new JFrame("Lehrerliste");
+        frame.setSize(300, 400);
+        frame.setResizable(false);
+        
+        JTextArea textArea = new JTextArea();
+        textArea.setText(table);
+        textArea.setEditable(false);
+        
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        
+        frame.add(scrollPane);
+        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }//GEN-LAST:event_jMI_LehrerlisteActionPerformed
 
     private void formAncestorResized(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_formAncestorResized
@@ -182,6 +375,25 @@ public class Wegfinder extends javax.swing.JFrame {
     }//GEN-LAST:event_formAncestorResized
 
     private void jMI_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_SaveActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = fc.showOpenDialog(null);
+        File f;
+        String path = "";
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            f = fc.getSelectedFile();
+            path = f.getPath();
+        }
+        
+        try {
+            f = new File(path + "\\Portable.txt");
+            fw = new FileWriter(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Datei kann nicht erstellt werden");
+        }
+        
         con.executeQuery("SELECT * FROM raumverteilung ORDER BY raum");
         List_extended<List_extended<String>> list;
         String[][] array = new String[con.getResultsAmount()][4];
@@ -235,6 +447,79 @@ public class Wegfinder extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Returns the last names of all teachers as a string array.
+     * @return 
+     */
+    private String[] getAllTeachersLastName() {   
+        List_extended<List_extended<String>> lehrerList;
+        con.executeQuery("SELECT DISTINCT * FROM lehrer ORDER BY nachname");
+        lehrerList = con.getResults();
+        int amount = con.getResultsAmount();
+        String[][] lehrer = new String[amount][2];
+            
+        lehrerList.toFirst();
+        for(int i = 0; i < lehrer.length; i++){
+            List_extended<String> l2 = lehrerList.getObject();
+            l2.toFirst();
+
+            for(int j = 0; j < lehrer[i].length; j++){
+                lehrer[i][j] = l2.getObject();
+                l2.next();
+            }
+
+            lehrerList.next();
+        }
+        String[] output = new String[amount];
+        for (int i = 0; i < amount; i++) {
+            output[i] = lehrer[i][0];
+        }
+        return output;
+    }
+    
+    /**
+     * Returns the last names of all teachers as a string array.
+     * @return 
+     */
+    private String[] getAllTeachersNames() {   
+        List_extended<List_extended<String>> lehrerList;
+        con.executeQuery("SELECT nachname, vorname FROM lehrer ORDER BY nachname");
+        lehrerList = con.getResults();
+        int amount = con.getResultsAmount();
+        String[][] lehrer = new String[amount][2];
+            
+        lehrerList.toFirst();
+        for(int i = 0; i < lehrer.length; i++){
+            List_extended<String> l2 = lehrerList.getObject();
+            l2.toFirst();
+
+            for(int j = 0; j < lehrer[i].length; j++){
+                lehrer[i][j] = l2.getObject();
+                l2.next();
+            }
+
+            lehrerList.next();
+        }
+        String[] output = new String[amount];
+        for (int i = 0; i < amount; i++) {
+            output[i] = lehrer[i][1] + " " + lehrer[i][0];
+        }
+        return output;
+    }
+    
+    /**
+     * Return the room the given teacher is in.
+     * @return 
+     */
+    private String getRoomOfTeacher(String tLastname) {
+        List_extended<List_extended<String>> result;
+        con.executeQuery("SELECT raum FROM raumverteilung WHERE nachname = '" + tLastname + "'");
+        result = con.getResults();
+        result.toFirst();
+        result.getObject().toFirst();
+        return result.getObject().getObject();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

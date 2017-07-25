@@ -13,7 +13,7 @@ import java.io.Writer;
 import listenklassen.List_extended;
 
 /**
- *
+ * -------------------------------Unused---------------------------------------
  * @author User
  */
 public class DBAktualisiere extends javax.swing.JFrame {

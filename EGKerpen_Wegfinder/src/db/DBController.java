@@ -18,7 +18,6 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import listenklassen.List_extended;
 /**
- *
  * @author Dominik Onyszkiewicz
  */
 public class DBController {
@@ -66,7 +65,7 @@ public class DBController {
             if(con != null) 
                 return;
             con = DriverManager.getConnection("jdbc:sqlite:" + DB_PATH);
-            System.out.println(System.getProperty("user.dir"));
+            //System.out.println(System.getProperty("user.dir"));
             
         }
         catch(SQLException e) {
@@ -122,10 +121,8 @@ public class DBController {
     }
     
     public void executeUpdate(String query) {
-        try {
-            Statement stmt = con.createStatement();
+        try (Statement stmt = con.createStatement()) {
             stmt.executeUpdate(query);
-            stmt.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -151,8 +148,8 @@ public class DBController {
             BufferedReader r = new BufferedReader(new FileReader(file));
             isFileCorrect = true;
             String zeile = null; 
-            stmt2.executeUpdate("CREATE TABLE IF NOT EXISTS raumverteilung (raum, nachname, vorname, verhindert, PRIMARY KEY(nachname))");
-            stmt2.executeUpdate("CREATE TABLE IF NOT EXISTS lehrer (nachname, vorname, PRIMARY KEY(nachname))");
+            stmt2.executeUpdate("CREATE TABLE IF NOT EXISTS raumverteilung (raum, nachname, vorname, verhindert, PRIMARY KEY(nachname, vorname))");
+            stmt2.executeUpdate("CREATE TABLE IF NOT EXISTS lehrer (nachname, vorname, PRIMARY KEY(nachname, vorname))");
             while ((zeile = r.readLine()) != null) { 
                 String[] batch = zeile.split(";");
                 if(batch.length != 4){

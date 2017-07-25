@@ -10,12 +10,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import egkerpen_wegfinder.EGKerpen_Wegfinder;
-import javafx.scene.input.KeyCode;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -36,6 +36,14 @@ public class DBInitialise extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        jPanel1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "debug");
+        jPanel1.getActionMap().put("debug", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nextInput();
+            }
+        });
     }
 
     /**
@@ -51,13 +59,12 @@ public class DBInitialise extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        verhindert = new javax.swing.JTextField();
         vorname = new javax.swing.JTextField();
         nachname = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         raum = new javax.swing.JComboBox();
+        cbVerhindert = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -76,15 +83,7 @@ public class DBInitialise extends javax.swing.JFrame {
 
         jLabel3.setText("Lehrer (Vorname):");
 
-        jLabel4.setText("Verhindert (0 oder 1):");
-
-        verhindert.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                verhindertKeyPressed(evt);
-            }
-        });
-
-        jButton1.setText("Weiter >>");
+        jButton1.setText("Einfügen");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 weiter(evt);
@@ -100,29 +99,31 @@ public class DBInitialise extends javax.swing.JFrame {
 
         raum.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Kunstraum 53", "Kunstraum 59", "Technikraum 62", "Mensa", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftladen", "Spielekeller", "Bibliothek" }));
 
+        cbVerhindert.setText("Verhindert");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(verhindert)
-                            .addComponent(vorname)
-                            .addComponent(nachname)
-                            .addComponent(raum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbVerhindert)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel1))
+                            .addGap(27, 27, 27)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(vorname)
+                                .addComponent(nachname)
+                                .addComponent(raum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -141,9 +142,7 @@ public class DBInitialise extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(vorname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(verhindert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(cbVerhindert)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -195,7 +194,9 @@ public class DBInitialise extends javax.swing.JFrame {
      * @param evt The event calling the method 
      */
     private void fertig(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fertig
-        weiter(null);
+        if(!nachname.getText().equals("")) {
+            nextInput();
+        }
         
         DBController r = DBController.getInstance();
         
@@ -243,12 +244,6 @@ public class DBInitialise extends javax.swing.JFrame {
         System.out.println(evt.getKeyCode());
     }//GEN-LAST:event_formKeyTyped
 
-    private void verhindertKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_verhindertKeyPressed
-        if(evt.getKeyCode() == 10) {
-            nextInput();
-        }
-    }//GEN-LAST:event_verhindertKeyPressed
-
     /**
      * @param args the command line arguments
      */
@@ -262,43 +257,35 @@ public class DBInitialise extends javax.swing.JFrame {
     }
     
     private void nextInput() {        
-        if(!nachname.getText().equals("") && /*!vorname.getText().equals("") &&*/ (verhindert.getText().equals("0") || verhindert.getText().equals("1")))
+        if(!nachname.getText().equals(""))
         {
-            insertToFile(String.valueOf(raum.getSelectedItem()), nachname.getText(), vorname.getText().equals("") ? "-" : vorname.getText(), Integer.parseInt(verhindert.getText()));
+            insertToFile(String.valueOf(raum.getSelectedItem()), nachname.getText(), vorname.getText().equals("") ? "-" : vorname.getText(), cbVerhindert.isSelected() ? 1 : 0);
         
             nachname.setText("");
             vorname.setText("");
-            verhindert.setText("");
-            raum.setSelectedIndex(raum.getSelectedIndex() + 1);
+            cbVerhindert.setSelected(false);
+            raum.setSelectedIndex(Math.min(raum.getSelectedIndex() + 1, raum.getItemCount() - 1));
             nachname.requestFocus();
         } 
         else 
         {
-            if(nachname.getText().equals("") && verhindert.getText().equals("")) 
-            {
-                
-            }
-            else 
-            {
-                JOptionPane.showMessageDialog(null, "Fehlerhafte oder fehlende Eingabe!");
-            }
+            JOptionPane.showMessageDialog(null, "Fehlerhafte oder fehlende Eingabe!");
         }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbVerhindert;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nachname;
     private javax.swing.JComboBox raum;
-    private javax.swing.JTextField verhindert;
     private javax.swing.JTextField vorname;
     // End of variables declaration//GEN-END:variables
 
