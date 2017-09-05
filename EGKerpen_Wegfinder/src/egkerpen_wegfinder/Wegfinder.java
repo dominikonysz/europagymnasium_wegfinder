@@ -14,6 +14,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,9 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -44,6 +44,8 @@ public class Wegfinder extends javax.swing.JFrame {
     File f;
     String[] allRooms;
     boolean lnInputStarted, fnInputStarted;
+    JFrame frame;
+
     
     /**
      * Creates new form Wegfinder
@@ -151,7 +153,7 @@ public class Wegfinder extends javax.swing.JFrame {
         
         lnInputStarted = true;
         fnInputStarted = true;
-        JFrame frame = new JFrame("Lehrer hinzufügen");
+        frame = new JFrame("Lehrer hinzufügen");
         frame.setSize(280, 200);
         frame.setResizable(false);
         frame.setLayout(null);
@@ -232,7 +234,7 @@ public class Wegfinder extends javax.swing.JFrame {
     }//GEN-LAST:event_jMI_LehrerHinzufuegenActionPerformed
 
     private void jMI_LehrerEntfernenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_LehrerEntfernenActionPerformed
-        JFrame frame = new JFrame("Lehrer entfernen");
+        frame = new JFrame("Lehrer entfernen");
         frame.setSize(280, 120);
         frame.setResizable(false);
         frame.setLayout(null);
@@ -272,7 +274,7 @@ public class Wegfinder extends javax.swing.JFrame {
     }//GEN-LAST:event_jMI_LehrerEntfernenActionPerformed
 
     private void jMI_RaumAendernActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_RaumAendernActionPerformed
-        JFrame frame = new JFrame("Raum ändern");
+        frame = new JFrame("Raum ändern");
         frame.setSize(280, 150);
         frame.setResizable(false);
         frame.setLayout(null);
@@ -293,13 +295,15 @@ public class Wegfinder extends javax.swing.JFrame {
             }
         });
         
-        rooms.setSelectedItem(getRoomOfTeacher((String) teachers.getSelectedItem()));
+        if(teachers.getSelectedItem() != null)
+            rooms.setSelectedItem(getRoomOfTeacher((String) teachers.getSelectedItem()));
         
         JButton bUpdate = new JButton("Ändern");
         bUpdate.setBounds(19, 80, frame.getWidth() - 43, 23);
         bUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO: Support for first and last name, so every teacher can get selected
                 con.executeUpdate("UPDATE raumverteilung SET raum = '" + rooms.getSelectedItem() 
                         + "' WHERE nachname = '" + teachers.getSelectedItem() + "'");
                 JOptionPane.showMessageDialog(frame, "Raum von \"" + teachers.getSelectedItem() + "\" wurde erfolgreich zu " + rooms.getSelectedItem() + " geändert");
@@ -348,12 +352,11 @@ public class Wegfinder extends javax.swing.JFrame {
             }
             newRow += s[2] + "\n";
             table += newRow;
-            newRow = "";
         }
         g2d.dispose();
         
         // new window with a textarea for all teachers
-        JFrame frame = new JFrame("Lehrerliste");
+        frame = new JFrame("Lehrerliste");
         frame.setSize(300, 400);
         frame.setResizable(false);
         

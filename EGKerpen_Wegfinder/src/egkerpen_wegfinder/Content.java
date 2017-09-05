@@ -189,11 +189,13 @@ public class Content extends javax.swing.JPanel{
             }
             else {
                 lS = new lSuche(this);
+                lS.setLocationRelativeTo(null);
                 lS.setVisible(true);
             }
         }
         catch(NullPointerException npe) {
             lS = new lSuche(this);
+            lS.setLocationRelativeTo(null);
             lS.setVisible(true);
         } 
     }//GEN-LAST:event_jButton6ActionPerformed

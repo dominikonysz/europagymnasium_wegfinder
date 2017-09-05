@@ -99,11 +99,10 @@ public class lSuche extends javax.swing.JFrame {
         });
         
         // Exit the TeacherSearchEngine with ESC
-        JPanel dummy = new JPanel();
-        this.add(dummy);
         lSuche lS = this;
-        dummy.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "tse");
-        dummy.getActionMap().put("tse", new AbstractAction() {
+        JPanel panel = (JPanel) this.getContentPane();
+        panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "tse");
+        panel.getActionMap().put("tse", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 lS.dispose();
