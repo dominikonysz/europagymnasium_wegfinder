@@ -8,12 +8,14 @@ package egkerpen_wegfinder;
 import db.DBController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import javafx.scene.input.KeyCode;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
@@ -23,7 +25,7 @@ import listenklassen.List_extended;
 /**
  * Dialog to search for a teacher
  * dynamically adds a button for each teacher to directly search for the path. 
- * @author Leonard
+ * @author Leonard Cohnen
  */
 public class lSuche extends javax.swing.JFrame {
 
@@ -39,6 +41,7 @@ public class lSuche extends javax.swing.JFrame {
     
     public lSuche(Content pContent) {
         initComponents();
+        lSuche frame = this;
         ButtonOffset = 0;
         buttons = new JButton[10]; //max 10 because only 5 will be displayed at the same time
         label = new JLabel[10];
@@ -108,6 +111,29 @@ public class lSuche extends javax.swing.JFrame {
                 lS.dispose();
             }
         });
+        
+        // Change the button position and the label width when resizing the frame
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent event) {
+                for(JButton b : buttons) {
+                    if(b != null) {
+                        b.setLocation((int) (frame.getWidth() - b.getWidth() - 30), (int) b.getLocation().getY());
+                    }
+                    else {
+                        break;
+                    }
+                }
+                for(JLabel l : label) {
+                    if(l != null) {
+                        l.setSize((int) (buttons[0].getLocation().getX() - 50), l.getHeight());
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }); 
     }
 
     /**
@@ -181,7 +207,7 @@ public class lSuche extends javax.swing.JFrame {
     private void makeJButton(String msg){
         JButton nB = new JButton();
         buttons[lbIterator] = nB;
-        nB.setBounds(180, 60 + ButtonOffset, 100, 27);
+        nB.setBounds(180, 60 + ButtonOffset, 120, 27);
         nB.setText(msg);
         
         lSuche lsuche = this;
@@ -190,7 +216,12 @@ public class lSuche extends javax.swing.JFrame {
             
             @Override
             public void actionPerformed(ActionEvent e){
-                cont.getGroundPlan().drawPath("Foyer", msg);
+                try {
+                    cont.getGroundPlan().drawPath("Foyer", msg);
+                }
+                catch(NullPointerException npe) {
+                    JOptionPane.showMessageDialog(rootPane, "Weg nicht verfügbar\nBitte Weg manuell zeigen", "Hinweis", JOptionPane.WARNING_MESSAGE);
+                }
                 cont.getParentFrame().requestFocus();
                 lsuche.setVisible(false);
             }
@@ -258,6 +289,6 @@ public class lSuche extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    public javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,8 +7,8 @@ package egkerpen_wegfinder;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
@@ -16,12 +16,11 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Bjoern Heinrichs
+ * @author Bjoern Heinrichs, edited by Dominik Onyszkiewicz & Leonard Cohnen
  */
 public class Content extends javax.swing.JPanel{
     private JFrame frame;
     private GroundPlanPanel groundPlan;
-    private int xOffset, yOffset;
     private lSuche lS;
     
     /**
@@ -36,6 +35,10 @@ public class Content extends javax.swing.JPanel{
         groundPlan = new GroundPlanPanel(this);
         frame.add(groundPlan);
         
+        jComboBox1.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
+        jComboBox2.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
+        
+        // Press 'S' Button to open the TSE
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('s'), "tse");
         this.getActionMap().put("tse", new AbstractAction() {
             @Override
@@ -186,17 +189,20 @@ public class Content extends javax.swing.JPanel{
         try {
             if(lS.isDisplayable()) {
                 lS.setVisible(true);
+                lS.jTextField1.requestFocus();
             }
             else {
                 lS = new lSuche(this);
                 lS.setLocationRelativeTo(null);
                 lS.setVisible(true);
+                lS.jTextField1.requestFocus();
             }
         }
         catch(NullPointerException npe) {
             lS = new lSuche(this);
             lS.setLocationRelativeTo(null);
             lS.setVisible(true);
+            lS.jTextField1.requestFocus();
         } 
     }//GEN-LAST:event_jButton6ActionPerformed
    

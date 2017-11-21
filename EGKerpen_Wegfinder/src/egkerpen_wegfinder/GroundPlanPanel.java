@@ -5,6 +5,7 @@
  */
 package egkerpen_wegfinder;
 
+import graphklassen.Dijkstra;
 import graphklassen.*;
 import java.awt.Color;
 import java.awt.Font;
@@ -37,7 +38,7 @@ import listenklassen.*;
 
 /**
  *
- * @author User
+ * @author Dominik Onyszkiewicz
  */
 public class GroundPlanPanel extends javax.swing.JPanel {
 

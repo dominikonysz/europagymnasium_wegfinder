@@ -2,7 +2,7 @@
  * This class implements Dijkstra's algorithm for shortest paths in a graph.
  */
 
-package egkerpen_wegfinder;
+package graphklassen;
 
 import graphklassen.Graph;
 import graphklassen.GraphNode;

@@ -18,7 +18,7 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 import listenklassen.List_extended;
 /**
- * @author Dominik Onyszkiewicz
+ * @author Birgit Pardella, Dominik Onyszkiewicz
  */
 public class DBController {
     
@@ -105,12 +105,13 @@ public class DBController {
             }
             
             while (rst.next()) {
-                datensatzAnzahl++;
                 List_extended<String> datensatz = new List_extended<>();
                 for (int i = 1; i<=attributAnzahl; i++) {
                     datensatz.append(String.valueOf(rst.getObject(i)));
                 }
+                System.out.println(String.valueOf(rst.getObject(1)));
                 attributWerte.append(datensatz);
+                datensatzAnzahl++;
             }
             
             rst.close();
@@ -140,6 +141,7 @@ public class DBController {
     
     public boolean dbInitialise(File file) {
         boolean isFileCorrect = false;
+        int counter = 0;
         
         try{            
             Statement stmt = con.createStatement();
@@ -159,6 +161,8 @@ public class DBController {
                 
                 stmt2.addBatch("INSERT INTO raumverteilung VALUES ('" + batch[0] + "', '" + batch[1] + "', '" + batch[2] + "', " + batch[3] + ")");
                 stmt2.addBatch("INSERT INTO lehrer VALUES ('" + batch[1] + "', '" + batch[2] + "')");
+                
+                System.out.println(++counter + " Lehrer wurden in die Warteschlange eingefügt");
             } 
             
             if(isFileCorrect){

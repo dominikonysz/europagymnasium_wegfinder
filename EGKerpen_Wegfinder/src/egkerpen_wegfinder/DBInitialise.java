@@ -13,7 +13,14 @@ import java.io.Writer;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
@@ -36,6 +43,8 @@ public class DBInitialise extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        raum.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
         
         jPanel1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "debug");
         jPanel1.getActionMap().put("debug", new AbstractAction() {
@@ -224,12 +233,22 @@ public class DBInitialise extends javax.swing.JFrame {
             int returnval = jf.showDialog(null, "Öffnen");
             
             if(returnval == JFileChooser.APPROVE_OPTION) {
-                if(jf.getSelectedFile().getPath().endsWith(".txt")){
-                    DBController r = DBController.getInstance();
+                if(jf.getSelectedFile().getPath().endsWith(".txt")) {
+                    int input = JOptionPane.showOptionDialog(this, 
+                            "Wird Format 1 (<raum>;<nachname>;<vorname>;<verhindert>)\n "
+                                    + "oder Format 2 (<raum>\\n<name>) verwendet?", "Formatauswahl", 
+                                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
+                                    new String[]{"Format 1", "Format 2"}, "Format 1");
+                    if(input == JOptionPane.YES_OPTION) {
+                        DBController r = DBController.getInstance();
 
-                    if(r.dbInitialise(jf.getSelectedFile())){
-                        EGKerpen_Wegfinder.main(null);
-                        this.dispose();
+                        if(r.dbInitialise(jf.getSelectedFile())){
+                            EGKerpen_Wegfinder.main(null);
+                            this.dispose();
+                        }
+                    }
+                    else if(input == JOptionPane.NO_OPTION) {
+                        importListTxt(jf.getSelectedFile());
                     }
                 } else
                     JOptionPane.showMessageDialog(null, "Bitte wählen Sie eine gültige Datei (\".txt\") aus.");
@@ -272,23 +291,7 @@ public class DBInitialise extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Fehlerhafte oder fehlende Eingabe!");
         }
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox cbVerhindert;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField nachname;
-    private javax.swing.JComboBox raum;
-    private javax.swing.JTextField vorname;
-    // End of variables declaration//GEN-END:variables
-
+    
     /**
      * This method inserts the values of the text fields into a file creating a new data set.
      * 
@@ -306,4 +309,94 @@ public class DBInitialise extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Imports a txt file with the format <name>\n<room>\n
+     * @param file selected file with file chooser
+     */
+    private void importListTxt(File file) {
+        try {
+            Reader isreader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            BufferedReader reader = new BufferedReader(isreader);
+            String row, row2, room, name;
+            int counter = 0;
+            while((row = reader.readLine()) != null) {
+                row2 = reader.readLine();
+                if(row.contains("ä")) {
+                    row = row.replaceAll("ä", "ae");
+                }
+                if(row.contains("ö")) {
+                    row = row.replaceAll("ö", "oe");
+                }
+                if(row.contains("ü")) {
+                    row = row.replaceAll("ü", "ue");
+                }
+                // if the row does not start with a letter, then simply skip the
+                // first character. Useful for the first line, that has a invisible
+                // character in front of the name.
+                if(!row.substring(0,1).matches("\\w")) {
+                    row = row.substring(1, row.length());
+                }
+                name = row;
+                // translation conditions and special inputs
+                // row is a room number
+                if(row2.matches("[+-]?\\d+")) {
+                    if(row2.equals("123")) {
+                        room = "Büro der Schulleitung/Sekretariat";
+                    }
+                    else if(row2.equals("126")) {
+                        room = "Büro der stellv. Schulleitung";
+                    }
+                    else if(row2.equals("Sorgenbüro")) {
+                        room = "Sorgenbuero";
+                    }
+                    else {
+                        room = "Raum " + row2;
+                    }
+                }
+                // row is a room designation
+                else {
+                    if(row2.equals("Sekreteriat")) {
+                        room = "Büro der Schulleitung/Sekretariat";
+                    }
+                    else {
+                        room = row2;
+                    }
+                }
+                // insert to import file
+                insertToFile(room, name, "", row2.equals("*") ? 1 : 0);
+                System.out.println(++counter + " Lehrer wurden zur Datei hinzugefügt");
+            }
+            DBController r = DBController.getInstance();
+
+            if(r.dbInitialise(f)){
+                EGKerpen_Wegfinder.main(null);
+                this.dispose();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Datei nicht gefunden");
+        } catch (IOException ex) {
+            System.out.println("Problem beim einlesen der Datei");
+        } catch (NullPointerException ex) {
+            System.out.println("Dateiformat fehlerhaft");
+            JOptionPane.showMessageDialog(this, "Dateiformat fehlerhaft");
+        }
+    }
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbVerhindert;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField nachname;
+    private javax.swing.JComboBox raum;
+    private javax.swing.JTextField vorname;
+    // End of variables declaration//GEN-END:variables
 }

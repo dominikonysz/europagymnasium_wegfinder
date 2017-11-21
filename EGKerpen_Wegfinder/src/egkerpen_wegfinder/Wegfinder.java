@@ -10,6 +10,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -35,16 +36,17 @@ import listenklassen.List_extended;
 
 /**
  *
- * @author User
+ * @author Dominik Onyszkiewicz
  */
 public class Wegfinder extends javax.swing.JFrame {
 
     DBController con;
     Writer fw;
     File f;
-    String[] allRooms;
     boolean lnInputStarted, fnInputStarted;
     JFrame frame;
+    
+    public static final String[] allRooms = new String[] {"Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Kunstraum 53", "Kunstraum 59", "Technikraum 62", "Mensa", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftbar", "Spielekeller", "Bibliothek"};
 
     
     /**
@@ -58,7 +60,6 @@ public class Wegfinder extends javax.swing.JFrame {
         super(title);
         initComponents();
         con = DBController.getInstance();
-        allRooms = new String[] {"Raum 38", "Raum 39", "Raum 42", "Raum 63", "Raum 64", "Raum 65", "Raum 66", "Raum 67", "Raum 70", "Raum 71", "Raum 72", "Raum 73", "Raum 87", "Raum 88", "Raum 89", "Raum 90", "Raum 92", "Raum 93", "Raum 94", "Raum 95", "Raum 96", "Raum 97", "Raum 104", "Raum 106", "Raum 107", "Raum 108", "Raum 109", "Raum 110", "Raum 132", "Raum 134", "Raum 135", "Raum 136", "Raum 137", "Raum 141", "Raum 142", "Raum 144", "Raum 145", "Raum 150", "Raum 151", "Raum 154", "Raum 155", "Raum 156", "Raum 166", "Raum 167", "Raum 168", "Raum 169", "Raum 170", "Raum 171", "Raum 174", "Raum 175", "Raum 184", "Raum 185", "Raum 188", "Raum 189", "Raum 190", "Raum 191", "Raum 192/193", "Raum 200", "Raum 203/204", "Raum 205", "Raum 206", "Raum 208", "Raum 209", "Raum 210", "Raum 212", "Raum 213", "Raum 215", "Raum 216", "Raum 217", "Raum 218", "Raum 219", "Raum 220", "Raum 222", "Raum 223", "Raum 227", "Raum 228", "Raum 229", "Raum 230", "Raum 231", "Raum 235", "Raum 236", "Raum 237", "Raum 238", "Raum 240", "Raum 241", "Raum 242", "Raum 250", "Raum 251", "Raum 253", "Raum 254", "Raum 255", "Raum 262", "Raum 263", "Raum 264", "Raum 266", "Raum 267", "Raum 269", "Raum 270", "Raum 283", "Raum 284", "Raum 286", "Raum 288", "Raum 289", "Raum 290", "Raum 293", "Raum 302", "Raum 303", "Raum 304", "Raum 305", "Raum 306", "Raum 307", "Raum 308", "Raum 309", "Raum 310", "Raum 311", "Raum 312", "Raum 313", "Raum 314", "Werkraum 8", "Werkraum 14", "Werkraum 15", "Werkraum 17", "Werkraum 20", "Werkraum 21", "Werkraum 24", "Werkraum 27", "Werkraum 32", "Kunstraum 53", "Kunstraum 59", "Technikraum 62", "Mensa", "Büro der Schulleitung/Sekretariat", "Büro der stellv. Schulleitung", "Saftladen", "Spielekeller", "Bibliothek"};
     }
 
     /**
@@ -322,7 +323,7 @@ public class Wegfinder extends javax.swing.JFrame {
     private void jMI_LehrerlisteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMI_LehrerlisteActionPerformed
         List_extended<List_extended<String>> lehrerList;
         //con.executeQuery("SELECT DISTINCT * FROM lehrer ORDER BY nachname");
-        con.executeQuery("SELECT lehrer.nachname, lehrer.vorname, raumverteilung.raum FROM lehrer LEFT JOIN raumverteilung ON lehrer.nachname = raumverteilung.nachname AND lehrer.vorname = raumverteilung.vorname ORDER BY lehrer.nachname");
+        con.executeQuery("SELECT lehrer.nachname, lehrer.vorname, raumverteilung.raum FROM lehrer JOIN raumverteilung ON lehrer.nachname = raumverteilung.nachname AND lehrer.vorname = raumverteilung.vorname ORDER BY lehrer.nachname");
         lehrerList = con.getResults();
         String[][] lehrer = new String[con.getResultsAmount()][3];
             
@@ -346,7 +347,7 @@ public class Wegfinder extends javax.swing.JFrame {
         String newRow;
         for(String[] s : lehrer) {
             newRow = "  " + s[0] + ", " + s[1];
-            int missingSpace = 150 - fm.stringWidth(newRow);
+            int missingSpace = 200 - fm.stringWidth(newRow);
             for (int i = 0; i < missingSpace / fm.stringWidth(" "); i++) {
                 newRow += " ";
             }
@@ -357,8 +358,7 @@ public class Wegfinder extends javax.swing.JFrame {
         
         // new window with a textarea for all teachers
         frame = new JFrame("Lehrerliste");
-        frame.setSize(300, 400);
-        frame.setResizable(false);
+        frame.setSize(400, 400);
         
         JTextArea textArea = new JTextArea();
         textArea.setText(table);
