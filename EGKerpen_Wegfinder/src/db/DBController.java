@@ -109,7 +109,6 @@ public class DBController {
                 for (int i = 1; i<=attributAnzahl; i++) {
                     datensatz.append(String.valueOf(rst.getObject(i)));
                 }
-                System.out.println(String.valueOf(rst.getObject(1)));
                 attributWerte.append(datensatz);
                 datensatzAnzahl++;
             }

@@ -181,8 +181,8 @@ public class Content extends javax.swing.JPanel{
     }//GEN-LAST:event_openSearch
 
     private void quit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quit
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.dispose();
+        // Quits the application
+        System.exit(0);
     }//GEN-LAST:event_quit
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

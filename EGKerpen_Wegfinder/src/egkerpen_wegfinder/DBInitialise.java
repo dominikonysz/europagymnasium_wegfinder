@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
@@ -39,6 +41,7 @@ public class DBInitialise extends javax.swing.JFrame {
         
         try {
             f = new File("dbContent.txt");
+            f.deleteOnExit();
             fw = new FileWriter(f);
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,6 +77,7 @@ public class DBInitialise extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         raum = new javax.swing.JComboBox();
         cbVerhindert = new javax.swing.JCheckBox();
+        jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -110,6 +114,13 @@ public class DBInitialise extends javax.swing.JFrame {
 
         cbVerhindert.setText("Verhindert");
 
+        jButton3.setText("Abbrechen");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3weiter(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -131,8 +142,10 @@ public class DBInitialise extends javax.swing.JFrame {
                                 .addComponent(raum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -155,7 +168,8 @@ public class DBInitialise extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -243,6 +257,7 @@ public class DBInitialise extends javax.swing.JFrame {
                         DBController r = DBController.getInstance();
 
                         if(r.dbInitialise(jf.getSelectedFile())){
+                            fw.close();
                             EGKerpen_Wegfinder.main(null);
                             this.dispose();
                         }
@@ -256,12 +271,24 @@ public class DBInitialise extends javax.swing.JFrame {
             
         } catch (HeadlessException e) {
             e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_importTxt
 
     private void formKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyTyped
         System.out.println(evt.getKeyCode());
     }//GEN-LAST:event_formKeyTyped
+
+    private void jButton3weiter(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3weiter
+        try {
+            fw.close();
+        } catch (IOException ex) {
+            Logger.getLogger(DBInitialise.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        EGKerpen_Wegfinder.main(null);
+        this.dispose();
+    }//GEN-LAST:event_jButton3weiter
 
     /**
      * @param args the command line arguments
@@ -364,12 +391,13 @@ public class DBInitialise extends javax.swing.JFrame {
                     }
                 }
                 // insert to import file
-                insertToFile(room, name, "", row2.equals("*") ? 1 : 0);
+                insertToFile(room, name, "-", row2.equals("*") ? 1 : 0);
                 System.out.println(++counter + " Lehrer wurden zur Datei hinzugefügt");
             }
             DBController r = DBController.getInstance();
 
             if(r.dbInitialise(f)){
+                fw.close();
                 EGKerpen_Wegfinder.main(null);
                 this.dispose();
             }
@@ -388,6 +416,7 @@ public class DBInitialise extends javax.swing.JFrame {
     private javax.swing.JCheckBox cbVerhindert;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

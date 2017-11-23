@@ -5,9 +5,7 @@
  */
 package egkerpen_wegfinder;
 
-import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import javax.swing.JScrollPane;
 
 /**
  *
