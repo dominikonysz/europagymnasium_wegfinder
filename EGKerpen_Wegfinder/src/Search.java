@@ -2,8 +2,10 @@
  * This class is used for an extended search query
  */
 
-package egkerpen_wegfinder;
 
+
+import backend.WegfinderBack;
+import frontend.UserInterface;
 import listenklassen.List_extended;
 import db.DBController;
 import javax.swing.JOptionPane;
@@ -182,7 +184,7 @@ public class Search extends javax.swing.JFrame {
             }
             
         } else if(jRadioButton2.isSelected()){
-            String[] possibleSel = Wegfinder.allRooms;
+            String[] possibleSel = WegfinderBack.allRooms;
             
             String raum = (String) JOptionPane.showInputDialog(null, "Welcher Raum ist gesucht?", null, JOptionPane.PLAIN_MESSAGE, null, possibleSel, "Raum 38");
             con.executeQuery("SELECT * FROM raumverteilung WHERE Raum = '" + raum + "'");

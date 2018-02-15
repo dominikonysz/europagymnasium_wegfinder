@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package egkerpen_wegfinder;
+package frontend;
 
+import backend.WegfinderBack;
 import db.DBController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,82 +28,79 @@ import listenklassen.List_extended;
  * dynamically adds a button for each teacher to directly search for the path. 
  * @author Leonard Cohnen
  */
-public class lSuche extends javax.swing.JFrame {
+public class TSEFront extends javax.swing.JFrame {
 
     /**
-     * Creates new form lSuche
+     * Creates new form TSEFront
      */
+    private UserInterface ui;
+    private WegfinderBack backend;
     private int ButtonOffset;  //vertical offset of the buttons and labels
-    private Content cont;      //parent object to draw path
     private JButton buttons[]; //to keep track of dynamically generated buttons for deletion
     private JLabel label[];    //to keep track of dynamically generated labels for deletion
     private int lbIterator;    //number of generated buttons and label at that time
+    private int maxEntries;
     
     
-    public lSuche(Content pContent) {
+    public TSEFront() {
         initComponents();
-        lSuche frame = this;
+        backend = WegfinderBack.getBackend();
+        ui = UserInterface.getUI();
+        
+        maxEntries = 8;
+        
+        TSEFront frame = this;
         ButtonOffset = 0;
         buttons = new JButton[10]; //max 10 because only 5 will be displayed at the same time
         label = new JLabel[10];
         lbIterator = 0;
-        cont = pContent;
         jTextField1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-             public void changedUpdate(DocumentEvent e) {
-               update();
-             }
-             @Override
-             public void removeUpdate(DocumentEvent e) {
-               update();
-             }
-             @Override
-             public void insertUpdate(DocumentEvent e) {
-               update();
-             }
+            public void changedUpdate(DocumentEvent e) {
+              update();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+              update();
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+              update();
+            }
             /**
              * is executed when anything changes in the textfield
              * used to display any teacher where the given string is a substring 
              * of the (sur)name
              */
-             private void update(){ 
-                 String lRequest = jTextField1.getText();
-                 DBController con = DBController.getInstance();
-                 String query = "SELECT * FROM raumverteilung WHERE Nachname Like '%" + lRequest + "%' AND NOT raum = '- (Verhindert)'";
-                 
-                 con.executeQuery(query);
-                 
-                 List_extended<List_extended<String>> l = con.getResults();
-                 
-                 if (con.getResultsAmount() <= 8){
-                     String[][] s = new String[con.getResultsAmount()][4];
-            
-                    l.toFirst();
-
-                    for(int i = 0; i < s.length; i++){
-                        List_extended<String> l2 = l.getObject();
-                        l2.toFirst();
-
-                        for(int j = 0; j < s[i].length; j++){
-                            s[i][j] = l2.getObject();
-                            l2.next();
+            private void update(){ 
+                clean();
+                
+                String lRequest = jTextField1.getText();
+                if(!lRequest.equals("")) {
+                    String[][] teacher = backend.getTeachersWith(lRequest);
+                    for(int i = 0; i < Math.min(teacher.length, maxEntries); i++){
+                        String name;
+                        if(teacher[i][0].equals("")) {
+                            name = teacher[i][1];
                         }
-
-                        l.next();
+                        else {
+                            name = teacher[i][1] + ", " + teacher[i][0];
+                        }
+                        addNewTeacher(name, teacher[i][2]);
                     }
-                    clean();
-                    System.out.println(con.getResultsAmount());
-                    for(int i = 0; i < con.getResultsAmount(); i++){
-                        addNewTeacher(s[i][1], s[i][0]);
+                    if(teacher.length < maxEntries) {
+                        String[] rooms = backend.getRoomsWith(lRequest);
+                        for (int i = 0; i < Math.min(maxEntries - teacher.length, rooms.length); i++) {
+                            addNewTeacher(rooms[i], rooms[i]);
+                        }
                     }
                 }
-
             }
              
         });
         
         // Exit the TeacherSearchEngine with ESC
-        lSuche lS = this;
+        TSEFront lS = this;
         JPanel panel = (JPanel) this.getContentPane();
         panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "tse");
         panel.getActionMap().put("tse", new AbstractAction() {
@@ -116,21 +114,26 @@ public class lSuche extends javax.swing.JFrame {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent event) {
-                for(JButton b : buttons) {
-                    if(b != null) {
-                        b.setLocation((int) (frame.getWidth() - b.getWidth() - 30), (int) b.getLocation().getY());
+                try {
+                    for(JButton b : buttons) {
+                        if(b != null) {
+                            b.setLocation((int) (frame.getWidth() - b.getWidth() - 30), (int) b.getLocation().getY());
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
-                        break;
+                    for(JLabel l : label) {
+                        if(l != null && buttons.length > 0) {
+                            l.setSize((int) (buttons[0].getLocation().getX() - 50), l.getHeight());
+                        }
+                        else {
+                            break;
+                        }
                     }
                 }
-                for(JLabel l : label) {
-                    if(l != null) {
-                        l.setSize((int) (buttons[0].getLocation().getX() - 50), l.getHeight());
-                    }
-                    else {
-                        break;
-                    }
+                catch (Exception e) {
+                    System.out.println("Irgendein Fehler beim skalieren des TSE Fensters");
                 }
             }
         }); 
@@ -210,20 +213,20 @@ public class lSuche extends javax.swing.JFrame {
         nB.setBounds(180, 60 + ButtonOffset, 120, 27);
         nB.setText(msg);
         
-        lSuche lsuche = this;
+        TSEFront lsuche = this;
         
         nB.addActionListener(new ActionListener(){
             
             @Override
             public void actionPerformed(ActionEvent e){
                 try {
-                    cont.getGroundPlan().drawPath("Foyer", msg);
+                    backend.drawPath("Foyer", msg);
+                    ui.updatePath("Foyer", msg);
                 }
                 catch(NullPointerException npe) {
                     JOptionPane.showMessageDialog(rootPane, "Weg nicht verfügbar\nBitte Weg manuell zeigen", "Hinweis", JOptionPane.WARNING_MESSAGE);
                 }
-                cont.getParentFrame().requestFocus();
-                lsuche.setVisible(false);
+                backend.getFrontend().requestFocus();
             }
         });
         

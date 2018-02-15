@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package egkerpen_wegfinder;
+package frontend;
 
+import backend.EGKerpen_Wegfinder;
 import db.DBController;
 import java.io.File;
 import java.io.FileWriter;

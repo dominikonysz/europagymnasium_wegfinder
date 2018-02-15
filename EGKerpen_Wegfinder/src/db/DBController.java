@@ -87,6 +87,12 @@ public class DBController {
         }); 
     }
     
+    /**
+     * Führt eine als String übergebene Datenbankanfrage aus. Diese wird so genutzt, 
+     * dass keine Veränderung an der Datenbank selbst stattfindet, sondern 
+     * lediglich Daten ausgelesen werden.
+     * @param query 
+     */
     public void executeQuery(String query){
         try{
             Statement stmt = con.createStatement();
@@ -120,6 +126,12 @@ public class DBController {
         }    
     }
     
+    /**
+     * Führt eine als String übergeben Datenbankaktualisierung aus. Es werden also
+     * keine Daten ausgelesen, sondern nur die Struktur oder der Inhalt der
+     * Datenbank verändert
+     * @param query 
+     */
     public void executeUpdate(String query) {
         try (Statement stmt = con.createStatement()) {
             stmt.executeUpdate(query);
@@ -137,7 +149,15 @@ public class DBController {
         return datensatzAnzahl;
     }
     
-    
+    /**
+     * This method is only used by the EGKerpen_Wegfinder project and is useless
+     * outside its use case.
+     * 
+     * Reads out a file with a particular scheme line by line and imports it into
+     * the database after removing all of its content.
+     * @param file
+     * @return 
+     */
     public boolean dbInitialise(File file) {
         boolean isFileCorrect = false;
         int counter = 0;

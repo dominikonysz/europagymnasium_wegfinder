@@ -3,8 +3,9 @@
  * It is able to paint the path between two rooms and to print the panel.
  */
 
-package egkerpen_wegfinder;
+package frontend;
 
+import backend.WegfinderBack;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -12,16 +13,15 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 /**
  *
  * @author Bjoern Heinrichs, edited by Dominik Onyszkiewicz & Leonard Cohnen
  */
-public class Content extends javax.swing.JPanel{
+public class Content extends javax.swing.JPanel {
     private JFrame frame;
     private GroundPlanPanel groundPlan;
-    private lSuche lS;
+    private TSEFront lS;
     
     /**
      * Constructor. Initializes the GUI components and attributes of the class.
@@ -32,11 +32,11 @@ public class Content extends javax.swing.JPanel{
         initComponents();
         this.frame = frame;
         
-        groundPlan = new GroundPlanPanel(this);
+        groundPlan = new GroundPlanPanel(this, 51);
         frame.add(groundPlan);
         
-        jComboBox1.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
-        jComboBox2.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
+        jComboBox1.setModel(new DefaultComboBoxModel(WegfinderBack.allRooms));
+        jComboBox2.setModel(new DefaultComboBoxModel(WegfinderBack.allRooms));
         
         // Press 'S' Button to open the TSE
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('s'), "tse");
@@ -62,7 +62,6 @@ public class Content extends javax.swing.JPanel{
         jComboBox2 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
@@ -81,13 +80,6 @@ public class Content extends javax.swing.JPanel{
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 print(evt);
-            }
-        });
-
-        jButton3.setText("Erw. Suche");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openSearch(evt);
             }
         });
 
@@ -118,9 +110,7 @@ public class Content extends javax.swing.JPanel{
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(132, 132, 132)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -135,7 +125,6 @@ public class Content extends javax.swing.JPanel{
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3)
                     .addComponent(jButton5)
                     .addComponent(jButton6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -175,11 +164,6 @@ public class Content extends javax.swing.JPanel{
         groundPlan.print();
     }//GEN-LAST:event_print
 
-    private void openSearch(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSearch
-        Search s = new Search();
-        s.setVisible(true);
-    }//GEN-LAST:event_openSearch
-
     private void quit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quit
         // Quits the application
         System.exit(0);
@@ -192,14 +176,14 @@ public class Content extends javax.swing.JPanel{
                 lS.jTextField1.requestFocus();
             }
             else {
-                lS = new lSuche(this);
+                lS = new TSEFront();
                 lS.setLocationRelativeTo(null);
                 lS.setVisible(true);
                 lS.jTextField1.requestFocus();
             }
         }
         catch(NullPointerException npe) {
-            lS = new lSuche(this);
+            lS = new TSEFront();
             lS.setLocationRelativeTo(null);
             lS.setVisible(true);
             lS.jTextField1.requestFocus();
@@ -240,7 +224,6 @@ public class Content extends javax.swing.JPanel{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JComboBox jComboBox1;

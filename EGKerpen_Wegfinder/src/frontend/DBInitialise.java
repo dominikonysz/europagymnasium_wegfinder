@@ -2,8 +2,10 @@
  * This class initialises the database which connects every teacher with a room.
  */
 
-package egkerpen_wegfinder;
+package frontend;
 
+import backend.EGKerpen_Wegfinder;
+import backend.WegfinderBack;
 import db.DBController;
 import java.awt.HeadlessException;
 import java.io.File;
@@ -16,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.logging.Level;
@@ -47,7 +48,7 @@ public class DBInitialise extends javax.swing.JFrame {
             e.printStackTrace();
         }
         
-        raum.setModel(new DefaultComboBoxModel(Wegfinder.allRooms));
+        raum.setModel(new DefaultComboBoxModel(WegfinderBack.allRooms));
         
         jPanel1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "debug");
         jPanel1.getActionMap().put("debug", new AbstractAction() {
@@ -212,7 +213,7 @@ public class DBInitialise extends javax.swing.JFrame {
     }//GEN-LAST:event_weiter
     
     /**
-     * This method calls the method weiter, initialises the database and opens a frame of the class Wegfinder.
+     * This method calls the method weiter, initialises the database and opens a frame of the class WegfinderFront.
      * 
      * @param evt The event calling the method 
      */
@@ -345,9 +346,10 @@ public class DBInitialise extends javax.swing.JFrame {
         try {
             Reader isreader = new InputStreamReader(new FileInputStream(file), "UTF-8");
             BufferedReader reader = new BufferedReader(isreader);
-            String row, row2, room, name;
+            String row, row2, room, name, fname;
             int counter = 0;
             while((row = reader.readLine()) != null) {
+                fname = null;
                 row2 = reader.readLine();
                 if(row.contains("ä")) {
                     row = row.replaceAll("ä", "ae");
@@ -364,21 +366,54 @@ public class DBInitialise extends javax.swing.JFrame {
                 if(!row.substring(0,1).matches("\\w")) {
                     row = row.substring(1, row.length());
                 }
+                if(row.endsWith(" ")) {
+                    row = row.substring(0, row.length() - 1);
+                }
+                if(row.endsWith(")")) {
+                    fname = row.substring(row.length() - 2, row.length());
+                    row = row.substring(0, row.length() - 2);
+                }
                 name = row;
                 // translation conditions and special inputs
                 // row is a room number
                 if(row2.matches("[+-]?\\d+")) {
-                    if(row2.equals("123")) {
-                        room = "Büro der Schulleitung/Sekretariat";
-                    }
-                    else if(row2.equals("126")) {
-                        room = "Büro der stellv. Schulleitung";
-                    }
-                    else if(row2.equals("Sorgenbüro")) {
-                        room = "Sorgenbuero";
-                    }
-                    else {
-                        room = "Raum " + row2;
+                    switch(row2) {
+                        case "123":
+                            room = "Büro der Schulleitung/Sekretariat";
+                            break;
+                        case "126":
+                            room = "Büro der stellv. Schulleitung";
+                            break;
+                        //Werkräume
+                        case "8":
+                        case "14":
+                        case "15":
+                        case "17":
+                        case "20":
+                        case "21":
+                        case "24":
+                        case "27":
+                        case "32":
+                            room = "Werkraum " + row2;
+                            break;
+                        case "53":
+                        case "59":
+                            room = "Kunstraum " + row2;
+                            break;
+                        case "62":
+                            room = "Technikraum " + row2;
+                            break;
+                        case "192":
+                        case "193":
+                            room = "Raum 192/193";
+                            break;
+                        case "203":
+                        case "204":
+                            room = "Raum 203/204";
+                            break;
+                        default:
+                            room = "Raum " + row2;
+                            break;
                     }
                 }
                 // row is a room designation
@@ -386,12 +421,18 @@ public class DBInitialise extends javax.swing.JFrame {
                     if(row2.equals("Sekreteriat")) {
                         room = "Büro der Schulleitung/Sekretariat";
                     }
+                    else if(row2.equals("Sorgenbüro")) {
+                        room = "Sorgenbuero";
+                    }
                     else {
                         room = row2;
                     }
                 }
                 // insert to import file
-                insertToFile(room, name, "-", row2.equals("*") ? 1 : 0);
+                if(fname == null) {
+                    fname = "-";
+                }
+                insertToFile(room, name, fname, row2.equals("*") ? 1 : 0);
                 System.out.println(++counter + " Lehrer wurden zur Datei hinzugefügt");
             }
             DBController r = DBController.getInstance();
