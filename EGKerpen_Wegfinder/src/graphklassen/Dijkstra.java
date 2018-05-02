@@ -4,8 +4,6 @@
 
 package graphklassen;
 
-import graphklassen.Graph;
-import graphklassen.GraphNode;
 import listenklassen.List;
 import listenklassen.Stack;
 

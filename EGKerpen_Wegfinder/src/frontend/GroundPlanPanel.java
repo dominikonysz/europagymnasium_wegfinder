@@ -394,6 +394,9 @@ public class GroundPlanPanel extends javax.swing.JPanel {
         }
         if(teachers.length > 0)
             teacherList = teacherList.substring(0, teacherList.length() - 1);
+        if(ui == null) {
+            ui = UserInterface.getUI();
+        }
         ui.updateRoomInformations(room, teacherList);
         return room;
     }

@@ -106,6 +106,7 @@ public class TSEFront extends javax.swing.JFrame {
         panel.getActionMap().put("tse", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                jTextField1.setText("");
                 lS.dispose();
             }
         });

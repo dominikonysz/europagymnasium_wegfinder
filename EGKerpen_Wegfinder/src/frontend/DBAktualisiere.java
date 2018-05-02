@@ -141,7 +141,7 @@ public class DBAktualisiere extends javax.swing.JFrame {
         if(i == s.length){
             DBController r = DBController.getInstance();
 
-            if(r.dbInitialise(f)){
+            if(r.dbInitialiseWegfinder(f)){
 
                 try {
                     fw.close();

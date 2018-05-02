@@ -224,7 +224,7 @@ public class DBInitialise extends javax.swing.JFrame {
         
         DBController r = DBController.getInstance();
         
-        if(r.dbInitialise(f)){
+        if(r.dbInitialiseWegfinder(f)){
         
             try {
                 fw.close();
@@ -257,7 +257,7 @@ public class DBInitialise extends javax.swing.JFrame {
                     if(input == JOptionPane.YES_OPTION) {
                         DBController r = DBController.getInstance();
 
-                        if(r.dbInitialise(jf.getSelectedFile())){
+                        if(r.dbInitialiseWegfinder(jf.getSelectedFile())){
                             fw.close();
                             EGKerpen_Wegfinder.main(null);
                             this.dispose();
@@ -351,6 +351,7 @@ public class DBInitialise extends javax.swing.JFrame {
             while((row = reader.readLine()) != null) {
                 fname = null;
                 row2 = reader.readLine();
+                System.out.println(row);
                 if(row.contains("ä")) {
                     row = row.replaceAll("ä", "ae");
                 }
@@ -360,6 +361,7 @@ public class DBInitialise extends javax.swing.JFrame {
                 if(row.contains("ü")) {
                     row = row.replaceAll("ü", "ue");
                 }
+                System.out.println(row);
                 // if the row does not start with a letter, then simply skip the
                 // first character. Useful for the first line, that has a invisible
                 // character in front of the name.
@@ -437,7 +439,7 @@ public class DBInitialise extends javax.swing.JFrame {
             }
             DBController r = DBController.getInstance();
 
-            if(r.dbInitialise(f)){
+            if(r.dbInitialiseWegfinder(f)){
                 fw.close();
                 EGKerpen_Wegfinder.main(null);
                 this.dispose();

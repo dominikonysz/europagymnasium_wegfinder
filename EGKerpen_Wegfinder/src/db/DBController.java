@@ -158,7 +158,7 @@ public class DBController {
      * @param file
      * @return 
      */
-    public boolean dbInitialise(File file) {
+    public boolean dbInitialiseWegfinder(File file) {
         boolean isFileCorrect = false;
         int counter = 0;
         

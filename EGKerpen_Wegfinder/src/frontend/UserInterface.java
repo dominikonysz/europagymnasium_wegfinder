@@ -64,7 +64,7 @@ public class UserInterface extends javax.swing.JFrame {
         jCB_To.setModel(new DefaultComboBoxModel(WegfinderBack.allRooms));
         
         
-        // Exit the TeacherSearchEngine with ESC
+        // Open the search engine with 'S'
         JPanel panel = (JPanel) this.getContentPane();
         panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "opense");
         panel.getActionMap().put("opense", new AbstractAction() {
@@ -85,6 +85,10 @@ public class UserInterface extends javax.swing.JFrame {
     
     public Navigator getNavigator() {
         return navi;
+    }
+    
+    public void openSE() {
+        bSEActionPerformed(null);
     }
 
     /**
@@ -135,8 +139,10 @@ public class UserInterface extends javax.swing.JFrame {
 
         jCB_From.setMaximumRowCount(15);
         jCB_From.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCB_From.setFocusable(false);
 
         jCB_To.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCB_To.setFocusable(false);
 
         bSearch.setText("Search");
         bSearch.addActionListener(new java.awt.event.ActionListener() {

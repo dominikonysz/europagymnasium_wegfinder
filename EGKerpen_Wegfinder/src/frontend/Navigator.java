@@ -6,7 +6,13 @@
 package frontend;
 
 import backend.WegfinderBack;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -29,6 +35,17 @@ public class Navigator extends javax.swing.JFrame {
         this.setSize(500 + 20, 500 + 39);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        
+        
+        // Open the search engine with 'S'
+        JPanel panel = (JPanel) this.getContentPane();
+        panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "opense");
+        panel.getActionMap().put("opense", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserInterface.getUI().openSE();
+            }
+        });
     }
     
     /**

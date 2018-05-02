@@ -385,7 +385,7 @@ public class ConnectionGraph extends Graph {
         this.addNode(new GraphNode("Raum 269", 787, 200));
         this.addNode(new GraphNode("Raum 270", 762, 200));
         this.addNode(new GraphNode("Raum 283", 762, 242));
-        this.addNode(new GraphNode("Raum 284", 768, 242));
+        this.addNode(new GraphNode("Raum 284", 788, 242));
         this.addNode(new GraphNode("Raum 286", 791, 263));
         this.addNode(new GraphNode("Raum 288", 747, 263));
         this.addNode(new GraphNode("Raum 289", 724, 263));
